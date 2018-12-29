@@ -10,11 +10,13 @@
     "sqlite3": "4.0.4"
   },
   "devDependencies": {
+    "mocha": "5.2.0",
     "nodemon": "1.18.9",
     "sass": "1.15.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha .\\tests\\functions\\test_html_parse.js",
+    "mocha_help": "mocha --help",
     "watch": "nodemon .\\tests\\get_name.js"
   },
   "repository": {
