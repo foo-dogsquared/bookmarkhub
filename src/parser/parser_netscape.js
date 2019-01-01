@@ -1,12 +1,10 @@
-const fs = require("fs");
-const os = require("os");
-const path = require("path");
 const jsdom = require("jsdom");
 const {JSDOM} = jsdom;
 
 function is_netscape(file_text) {
-    const netscape_doctype_string = `<!DOCTYPE NETSCAPE-Bookmark-file-1>`;
-    if (file_text.substring(0, netscape_doctype_string.length) === netscape_doctype_string)
+    const netscape_doctype_string = `NETSCAPE-Bookmark-file-1`.toLowerCase();
+    const doctype = (new JSDOM(file_text)).window.document.doctype.name.toLowerCase();
+    if (doctype === netscape_doctype_string)
         return true;
     else
         return false;
@@ -37,10 +35,11 @@ function html_dom_to_json(bookmark_item_dom, object = {}) {
     for (const node of bookmark_item_dom.children) {
         if (node.children.length > 0 && node.nodeName === "DT") {
             // the base case: when the bookmark item is a link
-            if (node.children[0].nodeName === "A") object[node.children[0].textContent] = node.children[0].href; 
-            else if (node.children[0].nodeName === "H3") {
-                Object.defineProperty(object, node.children[0].textContent, {value: {}});
-                html_dom_to_json(node.children[1], object[node.children[0].textContent]);
+            const bookmark_item_node = node.children[0];
+            if (bookmark_item_node.nodeName === "A") object[bookmark_item_node.textContent] = bookmark_item_node.href; 
+            else if (bookmark_item_node.nodeName === "H3") {
+                Object.defineProperty(object, bookmark_item_node.textContent, {value: {}});
+                html_dom_to_json(node.children[1], object[bookmark_item_node.textContent]);
             }
         }
     }
