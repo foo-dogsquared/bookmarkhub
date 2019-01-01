@@ -29,7 +29,7 @@ describe(`Validating a Netscape bookmark HTML file`, function() {
     });
 });
 
-describe(`Parsing through a Netscape bookmark HTML file`, function() {
+describe(`Parsing through a Netscape bookmark HTML file with common cases`, function() {
     it(`should detect the type of the bookmark to be imported`, function() {
         assert.deepStrictEqual(parser_src.parse_netscape(bookmark_text).type, "netscape");
     });
@@ -48,7 +48,7 @@ describe(`Parsing through a Netscape bookmark HTML file`, function() {
 
     it(`should create the object of the HTML body correctly`, function() {
         assert.deepStrictEqual(parser_src.parse_netscape(bookmark_text).children, complete_netscape_obj.children);
-    })
+    });
 
     it(`should return an object with the bookmarks from the generated HTML from bookmarks`, function() {
         assert.deepStrictEqual(parser_src.parse_netscape(bookmark_text), complete_netscape_obj);
