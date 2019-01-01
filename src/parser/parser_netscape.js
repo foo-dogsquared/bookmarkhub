@@ -36,10 +36,10 @@ function html_dom_to_json(bookmark_item_dom, object = {}) {
     // parses through the HTML DOM tree
     for (const node of bookmark_item_dom.children) {
         if (node.children.length > 0 && node.nodeName === "DT") {
+            // the base case: when the bookmark item is a link
             if (node.children[0].nodeName === "A") object[node.children[0].textContent] = node.children[0].href; 
             else if (node.children[0].nodeName === "H3") {
                 Object.defineProperty(object, node.children[0].textContent, {value: {}});
-                console.log(node.children[0].textContent);
                 html_dom_to_json(node.children[1], object[node.children[0].textContent]);
             }
         }
