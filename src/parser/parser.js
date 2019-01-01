@@ -11,12 +11,12 @@ function parse_bookmark(filepath) {
     const file_ext_name = path.extname(filepath).toLowerCase();
     if (file_ext_name === "html" || file_ext_name === "htm") {
         if (parser_netscape.is_netscape(bookmark_text))
-            parser_netscape.parse_netscape(bookmark_text);
+            return parser_netscape.parse_netscape(bookmark_text);
         else if (parser_pocket.is_pocket(bookmark_text)) 
-            parser_pocket.parse_pocket(bookmark_text);
+            return parser_pocket.parse_pocket(bookmark_text);
     }
     else if (parser_json.is_json(bookmark_text))
-        parser_json.parse_json(bookmark_text);
+        return parser_json.parse_json(bookmark_text);
     else
         throw new Error("The given file is not supported yet.");
 }
