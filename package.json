@@ -16,7 +16,7 @@
     "sass": "1.15.2"
   },
   "scripts": {
-    "test": "mocha .\\test\\functions\\test_html_parse.js",
+    "test": "mocha .\\test\\parser\\parser_netscape.js",
     "mocha_help": "mocha --help",
     "watch": "nodemon .\\tests\\get_name.js"
   },
