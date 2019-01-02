@@ -1,0 +1,34 @@
+{
+  "name": "bookmarkhub",
+  "version": "1.0.0",
+  "description": "A place to share your bookmarks or something.",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "1.18.3",
+    "cors": "2.8.5",
+    "express": "4.16.4",
+    "jsdom": "13.1.0",
+    "sqlite3": "4.0.4"
+  },
+  "devDependencies": {
+    "mocha": "5.2.0",
+    "nodemon": "1.18.9",
+    "sass": "1.15.2"
+  },
+  "scripts": {
+    "test": "mocha .\\test\\parser\\parser_netscape.js",
+    "mocha_help": "mocha --help",
+    "watch": "nodemon .\\tests\\get_name.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/foo-dogsquared/bookmarkhub.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/foo-dogsquared/bookmarkhub/issues"
+  },
+  "homepage": "https://github.com/foo-dogsquared/bookmarkhub#readme"
+}
