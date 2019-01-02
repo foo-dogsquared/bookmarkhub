@@ -1,5 +1,4 @@
 const fs = require("fs");
-const os = require("os");
 const path = require("path");
 const parser_json = require("./parser_json");
 const parser_netscape = require("./parser_netscape");

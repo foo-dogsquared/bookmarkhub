@@ -14,9 +14,10 @@ function parse_pocket(filetext) {
     const bookmark_obj = {};
     const {document: html_dom_tree} = (new JSDOM(filetext)).window;
     
-    if (document.title.toLowerCase === "pocket export") {
+    if (document.title.toLowerCase() === "pocket export") {
         bookmark_obj["type"] = "pocket";
         bookmark_obj["title"] = document.title;
+        bookmark_obj["root_name"] = "Bookmarks";
     }
     else throw new Error("Imported bookmark is not a Pocket export file.");
 

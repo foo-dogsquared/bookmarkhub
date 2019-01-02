@@ -38,7 +38,8 @@ function html_dom_to_json(bookmark_item_dom, object = {}) {
             const bookmark_item_node = node.children[0];
             if (bookmark_item_node.nodeName === "A") object[bookmark_item_node.textContent] = bookmark_item_node.href; 
             else if (bookmark_item_node.nodeName === "H3") {
-                Object.defineProperty(object, bookmark_item_node.textContent, {value: {}});
+                object[bookmark_item_node.textContent] = {};
+                if (!node.children[1]) continue;
                 html_dom_to_json(node.children[1], object[bookmark_item_node.textContent]);
             }
         }
