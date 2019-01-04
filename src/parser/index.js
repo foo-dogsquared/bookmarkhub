@@ -14,8 +14,14 @@ function parse_bookmark(filepath) {
         else if (parser_pocket.is_pocket(bookmark_text)) 
             return parser_pocket.parse_pocket(bookmark_text);
     }
-    else if (parser_json.is_json(bookmark_text))
-        return parser_json.parse_json(bookmark_text);
+    else if (file_ext_name === "json") {
+        if (parser_json.is_json(bookmark_text))
+            return parser_json.parse_json(bookmark_text);
+    }
     else
         throw new Error("The given file is not supported yet.");
+}
+
+module.exports = {
+    parse_bookmark
 }
