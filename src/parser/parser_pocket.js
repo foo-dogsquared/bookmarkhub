@@ -45,7 +45,7 @@ function check_anchor_tags(LI_node, object = {}) {
                 link_tags = link_tags.split(",");
                 for (const tag of link_tags) {
                     if (tag.trim() !== " ")  {
-                        if (!object[tag]) Object.defineProperty(object, tag, {value: {}});
+                        if (!object[tag]) object[tag] = {};
                         object[tag][anchor_node.textContent] = anchor_node.href;
                     }
                     else object[anchor_node.textContent] = anchor_node.href;
