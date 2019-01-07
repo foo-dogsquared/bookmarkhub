@@ -7,10 +7,9 @@ MongoClient.connect(process.env.MONGODB_URL, {useNewUrlParser: true}, function(e
     const db = client.db("test_db");
     const collection = db.collection("test_collection");
 
-    const results = collection.find({"age": {$lt: 40}}).toArray(function(err, result) {
+    collection.find({"age": {$lt: 40}}).toArray(function(err, result) {
         if (err) throw err;
         for (const item of result) console.log(item);
     });
-    console.log(results);
     client.close();
 });
