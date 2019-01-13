@@ -1,9 +1,9 @@
 doctype html
 html
     head
-        include head.pug
+        include ../include/head.pug
     body
-        include header.pug
-        block content
-        include footer.pug
-        include scripts.pug
+        include ../include/header.pug
+        main
+            block content
+        include ../include/footer.pug

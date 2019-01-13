@@ -2,7 +2,8 @@ header
     .wrapper.header
         .app-title-header
             h3.header-app-name #{app_name}
-            a(href="#{app_home_link}", class="app-home-link")
+            if open_sourced 
+                a(href="#{app_repo_link}", class="app-home-repo-link") Repo Link
         .account-container
             a(href="#{login_page}", class="navbar-link") Login
             a(href="#{signup_page}", class="navbar-link") Signup
