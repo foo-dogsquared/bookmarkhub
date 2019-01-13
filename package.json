@@ -23,8 +23,8 @@
   "scripts": {
     "test": "mocha .\\test\\parser\\parser_netscape.js",
     "mocha_help": "mocha --help",
-    "watch": "nodemon .\\tests\\get_name.js",
-    "start": "node app"
+    "watch": "nodemon server.js",
+    "start": "node server"
   },
   "repository": {
     "type": "git",
