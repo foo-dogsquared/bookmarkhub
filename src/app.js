@@ -2,9 +2,11 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const helmet = require('helmet');
+const node_sass_middleware = require("node-sass-middleware");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const nanoid_generate = require("nanoid/generate");
 const dotenv = require("dotenv").config();
+const logger = require("morgan");
 const nanoid_url_friendly_alphabet = require("nanoid/url");
 const bookmarkhub_api = require("./api");
 const path = require("path");
@@ -16,10 +18,26 @@ const session_store = new MongoDBStore({
     collection: "sessions"
 });
 
+const app_configurations = {
+    app_name: "bookmarkhub", 
+    app_repo_link: "https://github.com/foo-dogsquared/bookmarkhub", 
+    app_description: "A bookmark sharing hub for something."
+};
+
 app
     .use(helmet())
     .use(cors())
     .use(express.json())
+    .set("views", path.join(__dirname, "src/views"))
+    .set("view engine", "pug")
+    .use(node_sass_middleware({
+        src: path.join(__dirname, "src/style"),
+        dest: path.join(__dirname, "public/css"),
+        indentedSyntax: false,
+        debug: true,
+    }))
+    .use(logger("dev"))
+    .use(express.static(path.join(__dirname, "public")))
     .use(express.urlencoded({extended: true}))
     .use(session({
         cookie: {secure: true},
@@ -29,10 +47,8 @@ app
         resave: false,
         store: session_store
     }))
-    .set("views", path.join(__dirname, "views"))
-    .set("view engine", "pug")
     .use("*", function(req, res, next) {
-        res.appSettings = {app_name: "bookmarkhub", app_repo_link: "https://github.com/foo-dogsquared/bookmarkhub", app_description: "A bookmark sharing hub for something.", open_sourced: true};
+        res.appSettings = app_configurations;
         next();
     })
     .use("/", bookmarkhub_api.home)
