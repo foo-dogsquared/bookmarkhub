@@ -22,9 +22,9 @@ const session_store = new MongoDBStore({
 }, function(error) {if (error) throw new Error;});
 
 const app_configurations = {
-    app_name: "bookmarkhub", 
-    app_repo_link: "https://github.com/foo-dogsquared/bookmarkhub", 
-    app_description: "A bookmark sharing hub for something.",
+    app_name: APP_CONSTANTS.APP_NAME, 
+    app_repo_link: APP_CONSTANTS.APP_REPO_LINK, 
+    app_description: APP_CONSTANTS.APP_DESCRIPTION,
     login_page: APP_CONSTANTS.LOGIN_PAGE,
     signup_page: APP_CONSTANTS.SIGNUP_PAGE,
     about_page: APP_CONSTANTS.ABOUT,
