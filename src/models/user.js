@@ -6,10 +6,6 @@ try {
     console.error("Crypto support is disabled.");
 }
 
-// TODO: Make the user schema
-// TODO: Store the data with the appropriate methods
-// TODO: Store the passwords with hashing and salting
-// TODO: Find a way to make the retrieval and updating hashed data to be easier
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -24,6 +20,9 @@ const UserSchema = new mongoose.Schema({
         type: String
     },
     hashed_password: {
+        type: String
+    },
+    session_id: {
         type: String
     },
     bookmarks: bookmarks_schema
