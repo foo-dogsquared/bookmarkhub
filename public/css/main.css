@@ -1,0 +1,69 @@
+body {
+  font-family: "Georgia";
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: #7afdd6;
+  height: 10vh;
+}
+@media screen and (max-width: 450px) {
+  header {
+    height: unset;
+  }
+}
+
+main {
+  display: flex;
+  flex-flow: column nowrap;
+  height: 80vh;
+  margin: 20px auto;
+  max-width: 800px;
+  padding: 0 10px;
+}
+
+footer {
+  height: 10vh;
+  background: #a1e44d;
+}
+@media screen and (max-width: 450px) {
+  footer {
+    height: unset;
+  }
+}
+
+.wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.header {
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+.header-navbar {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.navbar-link {
+  margin: 0 10px;
+}
+
+.footer {
+  margin: 0 auto;
+  padding: 0 10px;
+}
