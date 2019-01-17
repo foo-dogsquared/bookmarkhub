@@ -1,6 +1,5 @@
 const assert = require("assert");
 const fs = require("fs");
-const mocha = require("mocha");
 const parser_src = require('../../src/parser/parser_netscape');
 
 const complete_netscape_obj = {
@@ -23,6 +22,9 @@ const complete_netscape_obj = {
 };
 
 const bookmark_text = fs.readFileSync("test\\bookmarks_file\\small_bookmark.html", {encoding: "utf8"});
+const firefox_bookmark = fs.readFileSync("test\\bookmarks_file\\firefox_test_bookmark.html", {encoding: "utf8"});
+const edge_bookmark = fs.readFileSync("test\\bookmarks_file\\edge_test_bookmark.html", {encoding: "utf8"});
+const chrome_bookmark = fs.readFileSync("test\\bookmarks_file\\chrome_test_bookmark.html", {encoding: "utf8"});
 
 describe(`Validating a Netscape bookmark HTML file`, function() {
     it(`should detect that it is a valid Netscape bookmark file from its DOCTYPE`, function() {
@@ -56,4 +58,26 @@ describe(`Parsing through a Netscape bookmark HTML file with common cases`, func
     it(`should return an object with the bookmarks from the generated HTML from bookmarks`, function() {
         assert.deepStrictEqual(parser_src.parse_netscape(bookmark_text), complete_netscape_obj);
     });
-})
+});
+
+describe(`Support for different browsers`, function() {
+    it(`should support Firefox (or Gecko-based) Netscape bookmarks`, function() {
+        assert.ok(parser_src.parse_netscape(firefox_bookmark));
+    });
+
+    it(`should support Edge Netscape bookmarks`, function() {
+        assert.ok(parser_src.parse_netscape(edge_bookmark));
+    });
+
+    it(`should support Chrome (or Chromium-based) Netscape bookmarks`, function() {
+        assert.ok(parser_src.parse_netscape(chrome_bookmark));
+    });
+
+    it(`should support Safari Netscape bookmarks`, function() {
+        assert.ok(parser_src.parse_netscape(safari_bookmark));
+    });
+
+    it(`should support Internet Explorer Netscape bookmarks`, function() {
+        assert.ok(parser_src.parse_netscape(ie_bookmark));
+    });
+});

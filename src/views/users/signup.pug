@@ -1,0 +1,9 @@
+extends ../layout/default
+
+block content
+    h1 Signup
+    form(method="post")
+        input(type="text", name="username", required)
+        input(type="text", name="email_address", required)
+        input(type="text", name="password", required)
+        input(type="submit", value="Sign up")

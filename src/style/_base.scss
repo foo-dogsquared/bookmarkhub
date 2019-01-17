@@ -1,0 +1,43 @@
+body {
+    font-family: $base-font-family;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+header {
+    background: $brand-color-1;
+    height: $non-main-height;
+
+    @media screen and (max-width: $on-phone) {
+        height: unset;
+    }
+}
+
+main {
+    display: flex;
+    flex-flow: column nowrap;
+    height: $main-height;
+    margin: $base-margin-width auto;
+    max-width: $max-width;
+    padding: 0 ($base-margin-width / 2);
+}
+
+footer {
+    height: $non-main-height;
+    background: $brand-color-2;
+
+    @media screen and (max-width: $on-phone) {
+        height: unset;
+    }
+}
+
+a {
+
+}

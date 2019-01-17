@@ -1,0 +1,29 @@
+.wrapper {
+    max-width: $max-width;
+    margin: 0 auto;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.header {
+    margin: 0 auto;
+    padding: 0 ($base-margin-width / 2);
+}
+
+.header-navbar {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.navbar-link {
+    margin: 0 ($base-margin-width / 2);
+}
+
+.footer {
+    margin: 0 auto;
+    padding: 0 ($base-margin-width / 2);
+}
+

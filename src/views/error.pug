@@ -1,0 +1,9 @@
+mixin error(res)
+    h2 #{res.statusCode}
+    h4 #{res.statusMessage}
+    if (res.statusCode[0] === 5)
+        p Come back later. Might be my server being fried or something.
+    else if (res.statusCode[0] === 4)
+        p Oof. Tough luck there, bud. Try reloading it.
+    else
+        p UNKNOWN ERROR? Maybe... Probably...

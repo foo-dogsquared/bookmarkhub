@@ -9,12 +9,12 @@ const invalid_test_json = "";
 describe(`Validating whether or not the file is in JSON export format`, function() {
     it(`File given is a valid JSON file to parse through`, function() {
         assert.deepStrictEqual(parser_json.is_json(valid_test_json), true);
-    })
+    });
 
     it(`File given does not have the valid key-value fields`, function() {
         assert.deepStrictEqual(parser_json.is_json(), false);
-    })
-})
+    });
+});
 
 describe(`Parsing through the valid JSON export file`, function() {
     it(`should give the correct type`, function() {
@@ -32,4 +32,4 @@ describe(`Parsing through the valid JSON export file`, function() {
     it(`should give the correct children`, function() {
         assert.deepStrictEqual(parser_json.parse_json_export(valid_test_json).type, complete_json_obj.children);
     });
-})
+});

@@ -1,0 +1,28 @@
+$brand-color-1: #7afdd6;
+$brand-color-light-1: lighten($brand-color-1, 10%);
+$brand-color-dark-1: darken($brand-color-1, 10%);
+
+$brand-color-2: #a1e44d;
+$brand-color-light-2: lighten($brand-color-2, 10%);
+$brand-color-dark-2: darken($brand-color-2, 10%);
+
+$brand-color-3: #60993e;
+$brand-color-light-3: lighten($brand-color-3, 10%);
+$brand-color-dark-3: darken($brand-color-3, 10%);
+
+$max-width: 800px;
+
+$on-phone: 450px;
+
+$base-font-size: 18px;
+$base-font-family: "Georgia";
+
+$base-margin-width: 20px;
+
+$main-height: 80vh;
+$non-main-height: (100vh - $main-height) / 2;
+
+@import
+    "base",
+    "layout"
+;
