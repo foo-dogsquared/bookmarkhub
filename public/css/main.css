@@ -1,5 +1,5 @@
 body {
-  font-family: "Georgia";
+  font-family: "Gentium Book Basic", "Georgia", "Times New Roman", serif;
   height: 100vh;
   margin: 0;
   padding: 0;
@@ -8,11 +8,15 @@ body {
 * {
   margin: 0;
   padding: 0;
+  box-sizing: content-box;
 }
 
 header {
-  background: #7afdd6;
+  background: url("/img/dark-wood.jpg");
   height: 10vh;
+}
+header a {
+  color: #e8e8e8;
 }
 @media screen and (max-width: 450px) {
   header {
@@ -23,15 +27,19 @@ header {
 main {
   display: flex;
   flex-flow: column nowrap;
-  height: 80vh;
+  min-height: 80vh;
   margin: 20px auto;
-  max-width: 800px;
+  max-width: 900px;
   padding: 0 10px;
 }
 
 footer {
+  background: url("/img/dark-wood.jpg");
+  color: white;
   height: 10vh;
-  background: #a1e44d;
+}
+footer a {
+  color: #e8e8e8;
 }
 @media screen and (max-width: 450px) {
   footer {
@@ -39,19 +47,26 @@ footer {
   }
 }
 
+img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
 .wrapper {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
   align-items: center;
   height: 100%;
-}
-
-.header {
-  margin: 0 auto;
   padding: 0 10px;
+}
+@media screen and (max-width: 450px) {
+  .wrapper {
+    padding: 1em;
+  }
 }
 
 .header-navbar {
@@ -62,8 +77,57 @@ footer {
 .navbar-link {
   margin: 0 10px;
 }
+.navbar-link:first-of-type {
+  margin-left: 0;
+  margin-right: 10px;
+}
 
-.footer {
-  margin: 0 auto;
-  padding: 0 10px;
+.faq-block {
+  display: flex;
+  margin: 35px 0;
+}
+.faq-block:nth-of-type(odd) {
+  flex-flow: row wrap;
+}
+.faq-block:nth-of-type(even) {
+  flex-flow: row-reverse wrap;
+}
+@media screen and (max-width: 750px) {
+  .faq-block {
+    display: block;
+  }
+}
+
+.faq-word-block {
+  width: 60%;
+}
+.faq-word-block h3 {
+  font-size: 1.7rem;
+}
+.faq-word-block p {
+  font-size: 1.35rem;
+  line-height: 1.5em;
+}
+@media screen and (max-width: 750px) {
+  .faq-word-block {
+    width: unset;
+  }
+}
+
+.faq-picture-block {
+  margin: auto;
+}
+@media screen and (max-width: 750px) {
+  .faq-picture-block {
+    display: none;
+  }
+}
+
+.signup-prompt {
+  background: #b8eb79;
+  border: dashed #8add21 3px;
+  display: block;
+  font-size: 1.75em;
+  margin: 3em auto;
+  padding: 3em;
 }
