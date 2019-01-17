@@ -10,14 +10,17 @@ $brand-color-3: #60993e;
 $brand-color-light-3: lighten($brand-color-3, 10%);
 $brand-color-dark-3: darken($brand-color-3, 10%);
 
-$max-width: 800px;
+$max-width: 900px;
 
 $on-phone: 450px;
+$on-tablet: 750px;
 
 $base-font-size: 18px;
-$base-font-family: "Georgia";
+$base-font-family: "Gentium Book Basic", "Georgia", "Times New Roman", serif;
 
 $base-margin-width: 20px;
+$base-line-height: 1.5em;
+$base-word-spacing: 1.2em;
 
 $main-height: 80vh;
 $non-main-height: (100vh - $main-height) / 2;

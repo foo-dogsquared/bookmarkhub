@@ -8,30 +8,34 @@ body {
 * {
     margin: 0;
     padding: 0;
+    box-sizing: content-box;
 }
 
 
 header {
-    background: $brand-color-1;
+    background: url("/img/dark-wood.jpg");
     height: $non-main-height;
 
-    @media screen and (max-width: $on-phone) {
-        height: unset;
-    }
+    a {color: #e8e8e8;}
+
+    @media screen and (max-width: $on-phone) {height: unset;}
 }
 
 main {
     display: flex;
     flex-flow: column nowrap;
-    height: $main-height;
+    min-height: $main-height;
     margin: $base-margin-width auto;
     max-width: $max-width;
     padding: 0 ($base-margin-width / 2);
 }
 
 footer {
+    background: url("/img/dark-wood.jpg");
+    color: white;
     height: $non-main-height;
-    background: $brand-color-2;
+
+    a {color: #e8e8e8;}
 
     @media screen and (max-width: $on-phone) {
         height: unset;
@@ -40,4 +44,10 @@ footer {
 
 a {
 
+}
+
+img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
 }
