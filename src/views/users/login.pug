@@ -1,4 +1,8 @@
-form(action="#{login_validation_api}", method="post")
-    input(type="text", name="username")
-    input(type="text", name="password")
-    input(type="button", value="Login")
+extends ../layout/default
+
+block content
+    h1 Login
+    form(method="post")
+        input(type="text", name="username", required)
+        input(type="text", name="password", required)
+        input(type="submit", value="Login")

@@ -1,5 +1,9 @@
-form(action="#{signup_validation_api}", method="post")
-    input(type="text", name="username")
-    input(type="text", name="email_address")
-    input(type="text", name="password")
-    input(type="button", value="Sign up")
+extends ../layout/default
+
+block content
+    h1 Signup
+    form(method="post")
+        input(type="text", name="username", required)
+        input(type="text", name="email_address", required)
+        input(type="text", name="password", required)
+        input(type="submit", value="Sign up")

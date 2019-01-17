@@ -1,13 +1,14 @@
 header
     .wrapper.header
         .header-app-titlebox
-            h3.header-app-name #{app_name}
+            a(href="/")
+                h3.header-app-name #{app_name}
             if app_repo_link 
-                a(href=app_repo_link, class="app-home-repo-link") Repo Link
+                a(href=app_repo_link, class="app-home-repo-link", target="_blank") Repo Link
         .header-navbar
             if user_logged_in
                 a(href=logout_page, class="navbar-link") Logout
-            else if !user_logged_in
+            else
                 a(href=login_page, class="navbar-link") Login
                 a(href=signup_page, class="navbar-link") Signup
             a(href=help_page, class="navbar-link") Help
