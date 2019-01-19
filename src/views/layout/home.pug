@@ -1,28 +1,11 @@
 extends default
 
-mixin faq_block(header, answer, img_link, img_alt)
-    .faq-block
-        .faq-word-block
-            h3= header
-            p !{answer}
-        img.faq-picture-block(src=img_link, alt=img_alt)
-
 block content
     img(src="/img/book-candle-tailpiece.jpg", alt="Book on a candle tailpiece")
-    h1 📖 #{app_name}
-    h2 #{app_description || "A bookmark sharing hub or something..."}
-    +faq_block("What is this site?", "It's a bookmark sharing site. Ever since the raging entity called the internet was born, the availability of knowledge has skyrocketed. While it is such a blessing for all, it also surmounts as a curse since the vast field of knowledge that is once small as a sea, now has expanded and began as a bottomless ocean giving overwhelming feeling to those who will dive into the depths for the first time.", "/img/book-with-bookmark.png", "A vast ocean of books.")
-    +faq_block("How to use it?", "It's an online application which means you need WiFi in order to use it. Furthermore, you need to register an account in order to use the features of this app. There is also a planned offline version (if possible) of this app so keep an eye for that, knowledge explorer.", "/img/account-users.png", "Multiple silhouettes representing accounts.")
-    .faq-block 
-        .faq-word-block 
-            h3 What is the cost? 
-            p No need for suspicion, wanderers of cyberspace. This program is free and it is, in fact, an open source software which you can visit the remote repository that is located on Mt. GitHub right #[a(href=app_repo_link, target='_blank') here]. 
-        img.faq-picture-block(src="/img/free-of-cost.png", alt="Picture of credit card with an 'X' sign.")
-    .faq-block
-        .faq-word-block
-            h3 Who can I make contact with in case I want to talk to them?
-            p The creator is #[a(href="/img/dog-reading.jpg", target="_blank") #{author || "foo-dogsquared"}] which he usually calls his developer home on #[a(href=github_link || "https://github.com/foo-dogsquared", target="_blank") Mt. GitHub] but you can find more ways to contact him on his #[a(href=author_link || "https://foo-dogsquared.github.io", target="_blank") home]. 
-        img.faq-picture-block(src="/img/contact-icon.png", alt="Dogs")
+    h1 #{app_configuration.app_icon} #{app_configuration.app_name}
+    h2 #{app_configuration.app_description}
+    p Hey there, cyberspace wanderer. I'm pretty sure you're us
+    p #{app_configuration.login} #{app_configuration.login_page}
     .signup-prompt
         p So what are you waiting for?
-        a(href="/account/signup") Start sharing the knowledge now.
+        a(href=app_configuration.signup_page) Start sharing the knowledge now.

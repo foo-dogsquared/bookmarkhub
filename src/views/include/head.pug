@@ -1,8 +1,12 @@
 head
-    title #{title} | #{app_name}
+    if replace_title
+        title #{title}
+    else
+        title #{title} | #{app_configuration.app_name}
     link(rel="stylesheet", href="/css/main.css")
     link(rel="icon", type="image/jpg", sizes="32x32", href="/img/icon.png")
-    link(href="https://fonts.googleapis.com/css?family=Gentium+Book+Basic" rel="stylesheet")
+    link(href="https://fonts.googleapis.com/css?family=Fira+Sans|Libre+Baskerville" rel="stylesheet")
+
     // meta tags
     meta(http-equiv="X-UA-Compatible", content="IE=7")
     meta(http-equiv="Content-Type", content="text/html;charset=UTF-8")
