@@ -1,3 +1,6 @@
+test/bookmarks_file/*.html
+test/bookmarks_file/*.json
+
 # Logs
 logs
 *.log
