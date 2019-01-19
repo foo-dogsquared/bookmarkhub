@@ -16,13 +16,14 @@ $on-phone: 450px;
 $on-tablet: 750px;
 
 $base-font-size: 18px;
-$base-font-family: "Gentium Book Basic", "Georgia", "Times New Roman", serif;
+$base-font-family: "Libre Baskerville", "Gentium Book Basic", "Georgia", "Book Antiqua", serif;
+$secondary-font-family: "Fira Sans", Helvetica, Arial, sans-serif;
 
 $base-margin-width: 20px;
 $base-line-height: 1.5em;
 $base-word-spacing: 1.2em;
 
-$main-height: 80vh;
+$main-height: 75vh;
 $non-main-height: (100vh - $main-height) / 2;
 
 @import

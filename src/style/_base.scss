@@ -1,8 +1,13 @@
 body {
     font-family: $base-font-family;
+    font-size: $base-font-size;
     height: 100vh;
     margin: 0;
     padding: 0;
+
+    @media screen and (max-width: $on-phone) {
+        font-size: $base-font-size * 0.9;
+    }
 }
 
 * {
@@ -14,7 +19,6 @@ body {
 
 header {
     background: url("/img/dark-wood.jpg");
-    height: $non-main-height;
 
     a {color: #e8e8e8;}
 
@@ -30,10 +34,31 @@ main {
     padding: 0 ($base-margin-width / 2);
 }
 
+h1 {margin: $base-margin-width 0;}
+h1 ~ h2 {margin: $base-margin-width / 2 0;}
+h1 + h2 {margin-top: 0;}
+
+h2 {margin: $base-margin-width 0;}
+h2 ~ h3 {margin: $base-margin-width / 2 0;}
+h2 + h3 {margin-top: 0;}
+
+h3 {margin: $base-margin-width 0;}
+h3 ~ h4 {margin: $base-margin-width / 2 0;}
+h3 + h4 {margin-top: 0;}
+
+h4 {margin: $base-margin-width 0;}
+h4 ~ h5 {margin: $base-margin-width / 2 0;}
+h4 + h5 {margin-top: 0;}
+
+h5 {margin: $base-margin-width 0;}
+h5 ~ h6 {margin: $base-margin-width / 2 0;}
+h5 + h6 {margin-top: 0;}
+
+h6 {margin: $base-margin-width 0;}
+
 footer {
     background: url("/img/dark-wood.jpg");
     color: white;
-    height: $non-main-height;
 
     a {color: #e8e8e8;}
 
@@ -42,12 +67,20 @@ footer {
     }
 }
 
-a {
-
-}
-
 img {
     display: block;
     margin: 0 auto;
     max-width: 100%;
+}
+
+input[type="text"], input[type="password"],
+input[type="url"], input[type="email"], input[type="search"] {
+    font-size: 1.1em;
+    display: block;
+}
+
+
+input[type="button"], input[type="reset"],
+button {
+
 }
