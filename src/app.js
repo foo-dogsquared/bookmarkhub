@@ -2,7 +2,6 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const helmet = require('helmet');
-const MongoDBStore = require("connect-mongodb-session")(session);
 const cookie_parser = require("cookie-parser");
 const nanoid_generate = require("nanoid/generate");
 const dotenv = require("dotenv").config();
@@ -10,16 +9,12 @@ const logger = require("morgan");
 const nanoid_url_friendly_alphabet = require("nanoid/url");
 const bookmarkhub_router = require("./router");
 const path = require("path");
-const APP_CONSTANTS = require("./app_constants");
+const app_constants = require("./app_constants");
+const session_store = require("./session_store");
 
 const app = express();
 
-console.log(APP_CONSTANTS.mongodb_db_url);
-
-const session_store = new MongoDBStore({
-    uri: APP_CONSTANTS.mongodb_db_url,
-    collection: "sessions"
-}, function(error) {if (error) return error;});
+console.log(app_constants.mongodb_db_url);
 
 app
     .use(helmet())
@@ -32,16 +27,19 @@ app
     .use(express.urlencoded({extended: true}))
     .use(cookie_parser())
     .use(session({
-        cookie: {secure: true},
+        cookie: {
+            secure: true,
+            maxAge: app_constants.cookies.MAX_AGE
+        },
         genid: function(req) {return "_" + nanoid_generate(nanoid_url_friendly_alphabet, 19)},
         saveUninitialized: false,
         secret: process.env.COOKIE_SECRET,
         resave: false,
-        store: session_store
+        store: session_store,
     }))
-    .use(APP_CONSTANTS.home, bookmarkhub_router.home)
-    .use(APP_CONSTANTS.page, bookmarkhub_router.page)
-    .use(APP_CONSTANTS.account, bookmarkhub_router.account)
-    .use(APP_CONSTANTS.bookmarks_page, bookmarkhub_router.bookmark)
+    .use(app_constants.app_configuration.home, bookmarkhub_router.home)
+    .use(app_constants.app_configuration.page, bookmarkhub_router.page)
+    .use(app_constants.app_configuration.account, bookmarkhub_router.account)
+    .use(app_constants.app_configuration.bookmarks_page, bookmarkhub_router.bookmark)
 
 module.exports = app;
