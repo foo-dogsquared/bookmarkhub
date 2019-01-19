@@ -1,28 +1,29 @@
 const express = require("express");
-const {app_name, app_description, app_repo_link, home, login_page, signup_page, about_page, help_page} = require("../app_constants");
-
+const {app_configuration} = require("../app_constants");
 const home_router = express.Router();
-;
 
-home_router.get("/", function(req, res) {
+home_router.get(app_configuration.home, function(req, res) {
         res.render("layout/home", {
-        title: `${app_name} | ${app_description}`, 
+        title: `${app_configuration.app_name} | ${app_configuration.app_description}`, 
         replace_title: true,
-        app_name, app_description, app_repo_link, login_page, signup_page, about_page, help_page
+        app_configuration,
+        user_logged_in: req.cookies.user_logged_in
     });
 });
 
-home_router.get("/help", function(req, res) {
+home_router.get(app_configuration.help_page, function(req, res) {
     res.render("layout/help", {
         title: `Help`,
-        app_name, app_description, app_repo_link, login_page, signup_page, about_page, help_page
+        app_configuration,
+        user_logged_in: req.session.user_logged_in
     })
 })
 
-home_router.get("/about", function(req, res) {
+home_router.get(app_configuration.about_page, function(req, res) {
     res.render("layout/about", {
         title: `About`,
-        app_name, app_description, app_repo_link, login_page, signup_page, about_page, help_page
+        app_configuration,
+        user_logged_in: req.session.user_logged_in
     })
 })
 

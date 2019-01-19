@@ -1,36 +1,61 @@
-const {app_name, app_repo_link, app_description, login_page, signup_page, bookmarks_page, about_page, help_page} = require("../app_constants");
 const mongoose = require("mongoose");
 const account_router = require("express").Router();
-const controller = require("../controllers/index");
 const email_validator = require("email-validator");
+const {app_configuration} = require("../app_constants");
+const app_constants = require("../app_constants");
+const session_store = require("../session_store");
+const controller = require("../controllers/index");
 
-account_router.get("/login", function(req, res) {
+account_router.get(app_configuration.login, function(req, res) {
     if (req.session.is_user_logged) res.redirect(bookmarks_page);
     else {
         res.render("users/login", {
             title: "Login",
-            app_name, app_repo_link, app_description, login_page, signup_page, about_page, help_page
+            app_configuration
         })
     }
 });
 
-account_router.post("/login", function(req, res) {
-    console.log(req.body);
-    res.send("HELLO!")
+account_router.post(app_configuration.login, function(req, res) {
+    controller.users.login_user(req, res, req.body.username, req.body.password)
+    .then()
+    .catch(function(error) {
+        console.log("IT fials");
+    })
 })
 
-account_router.get("/signup", function(req, res) {
+account_router.get(app_configuration.signup, function(req, res) {
+    const error_message = (req.cookies.error) ? JSON.parse(req.cookies.error) : undefined;
+    if (req.cookies.error) res.clearCookie(app_constants.cookies.ERROR);
     res.render("users/signup", {
         title: "Sign Up",
-        app_name, app_repo_link, app_description, login_page, signup_page, about_page, help_page
+        app_configuration,
+        error: error_message
     });
-})
+});
 
-account_router.post("/signup", function(req, res) {
-    console.log(req.body, Boolean(req.body.username) === true, req.body.password.length >= 8, email_validator.validate(req.body.email_address));
-    if (Boolean(req.body.username) && (req.body.password.length >= 8) && email_validator.validate(req.body.email_address)) {
-        controller.users.register_user(req, res, req.body.username, req.body.email_address, req.body.password);
-    }
+account_router.post(app_configuration.signup, function(req, res) {
+    controller.users.register_user(req, res, req.body.username, req.body.email_address, req.body.password)
+    .then(function() {
+        req.session[app_constants.cookies.USER_LOGGED_IN] = true;
+        res.cookie(app_constants.cookies.USER_LOGGED_IN, true);
+        res.cookie(app_constants.cookies.SESSION_ID, req.sessionID)
+        res.redirect(app_configuration.home);
+    })
+    .catch(function(error) {
+        console.log(error);
+        const error_messages = {};
+        if (error) {
+            for (const field in error.extra.errors) {error_messages[field] = error.extra.errors[field].message;}
+            res.cookie(app_constants.cookies.ERROR, JSON.stringify(error_messages));
+        }
+        
+        res.redirect(app_configuration.signup_page);
+    });
+});
+
+account_router.get(app_configuration.logout, function(req, res) {
+    res.status(307).redirect()
 })
 
 module.exports = account_router;
