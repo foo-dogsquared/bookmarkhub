@@ -10,26 +10,16 @@ const logger = require("morgan");
 const nanoid_url_friendly_alphabet = require("nanoid/url");
 const bookmarkhub_router = require("./router");
 const path = require("path");
-const APP_CONSTANTS = require("./constant_routes");
-
-
-const mongodb_url = process.env.MONGODB_URL || "mongodb://127.0.0.1/test"
+const APP_CONSTANTS = require("./app_constants");
 
 const app = express();
-const session_store = new MongoDBStore({
-    uri: mongodb_url,
-    collection: "sessions"
-}, function(error) {if (error) throw new Error;});
 
-const app_configurations = {
-    app_name: APP_CONSTANTS.APP_NAME, 
-    app_repo_link: APP_CONSTANTS.APP_REPO_LINK, 
-    app_description: APP_CONSTANTS.APP_DESCRIPTION,
-    login_page: APP_CONSTANTS.LOGIN_PAGE,
-    signup_page: APP_CONSTANTS.SIGNUP_PAGE,
-    about_page: APP_CONSTANTS.ABOUT,
-    help_page: APP_CONSTANTS.HELP
-};
+console.log(APP_CONSTANTS.mongodb_db_url);
+
+const session_store = new MongoDBStore({
+    uri: APP_CONSTANTS.mongodb_db_url,
+    collection: "sessions"
+}, function(error) {if (error) return error;});
 
 app
     .use(helmet())
@@ -49,13 +39,9 @@ app
         resave: false,
         store: session_store
     }))
-    .use("*", function(req, res, next) {
-        res.appSettings = app_configurations;
-        next();
-    })
-    .use(APP_CONSTANTS.HOME, bookmarkhub_router.home)
-    .use(APP_CONSTANTS.PAGE, bookmarkhub_router.page)
-    .use(APP_CONSTANTS.ACCOUNT, bookmarkhub_router.account)
-    .use(APP_CONSTANTS.BOOKMARKS, bookmarkhub_router.bookmark)
+    .use(APP_CONSTANTS.home, bookmarkhub_router.home)
+    .use(APP_CONSTANTS.page, bookmarkhub_router.page)
+    .use(APP_CONSTANTS.account, bookmarkhub_router.account)
+    .use(APP_CONSTANTS.bookmarks_page, bookmarkhub_router.bookmark)
 
 module.exports = app;
