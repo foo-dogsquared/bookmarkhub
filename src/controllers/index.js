@@ -1,5 +1,5 @@
-const user_actions = require("user_actions");
+const users = require("./users");
 
 module.exports = {
-    user_actions
+    users
 }
