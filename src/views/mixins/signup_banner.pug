@@ -1,0 +1,5 @@
+mixin signup_prompt(user_session_id)
+    if !user_session_id
+        .signup-prompt
+            p So what are you waiting for?
+            a(href=app_configuration.signup_page) Start sharing the knowledge now.

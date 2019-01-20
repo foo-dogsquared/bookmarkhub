@@ -4,10 +4,12 @@
   "description": "A place to share your bookmarks or something.",
   "main": "index.js",
   "dependencies": {
-    "connect-mongodb-session": "2.0.6",
+    "connect-mongo": "2.0.3",
     "cookie-parser": "1.4.3",
     "cors": "2.8.5",
+    "csurf": "1.9.0",
     "dotenv": "6.2.0",
+    "email-validator": "2.0.4",
     "express": "4.16.4",
     "express-session": "1.15.6",
     "helmet": "3.15.0",

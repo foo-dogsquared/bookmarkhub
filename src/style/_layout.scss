@@ -6,24 +6,70 @@
     justify-content: space-between;
     align-items: center;
     height: 100%;
+    padding: ($base-margin-width);
+
+    @media screen and (max-width: $on-phone) {padding: 1em;}
 }
 
-.header {
-    margin: 0 auto;
-    padding: 0 ($base-margin-width / 2);
+.header-app-titlebox {
+    @media screen and (max-width: $on-phone) {margin: 0 auto; text-align: center;}
 }
 
 .header-navbar {
     display: flex;
     flex-flow: row nowrap;
+
+    @media screen and (max-width: $on-phone) {margin: $base-margin-width auto;}
 }
 
 .navbar-link {
     margin: 0 ($base-margin-width / 2);
+    &:first-of-type {margin-left: 0; margin-right: ($base-margin-width / 2)}
 }
 
-.footer {
-    margin: 0 auto;
-    padding: 0 ($base-margin-width / 2);
+.faq-block {
+    display: flex;
+    margin-bottom: ($base-margin-width * 1.75);
+    
+    &:nth-of-type(odd) {flex-flow: row wrap;}
+    &:nth-of-type(even) {flex-flow: row-reverse wrap;}
+
+    @media screen and (max-width: $on-tablet) {display: block;}
 }
+
+.faq-word-block {
+    width: 60%;
+
+    p {
+        font-size: 1.3rem; 
+        line-height: $base-line-height; 
+        font-family: $secondary-font-family;
+
+        @media screen and (max-width: $on-tablet) {font-size: 1.2rem;}
+        @media screen and (max-width: $on-phone) {font-size: 1.1rem;}
+    }
+
+    @media screen and (max-width: $on-tablet) {width: unset;}
+}
+
+.faq-picture-block {
+    margin: auto;
+    @media screen and (max-width: $on-tablet) {display: none;}
+}
+
+.social-icons {
+    width: 32px;
+    height: auto;
+    fill: white;
+}
+
+.signup-prompt {
+    background: $brand-color-light-2;
+    border: dashed $brand-color-dark-2 3px;
+    display: block;
+    font-size: 1.5em;
+    margin: 3em auto;
+    padding: 1.5em;
+}
+
 

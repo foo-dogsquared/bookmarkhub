@@ -1,0 +1,18 @@
+mixin bookmark_component(object)
+    - const root_name = object["root_name"] || "Your Bookmarks"
+    - const title = object["title"] || "Your Bookmarks"
+    h1 #{title}
+    h3 Imported from #{object["type"]}
+    h1 #{root_name}
+    ul 
+        +bookmark_children_component(object["children"])
+
+mixin bookmark_children_component(children)
+    each value, key in children
+        if (typeof(value) === "object" && value.toString() === "[object Object]")
+            li #{key}
+                ul
+                    +bookmark_children_component(value)
+        else
+            li
+                a(href=value) #{key}

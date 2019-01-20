@@ -1,3 +1,8 @@
 footer
-    .wrapper.footer
-        p #{new Date().getFullYear()} © #[a(href=author_link || "https://github.com/foo-dogsquared") #{author || "Gabriel Arazas"}]
+    .wrapper
+        p #{new Date().getFullYear()} © #[a(href=app_configuration.author_link) #{app_configuration.author}]
+        .social-icons-box
+            each value, key in app_configuration.author_social_links
+                a(href=value, target="_blank")
+                    svg.social-icons
+                        use(xlink:href="/img/author-social-icons.svg#" + key)

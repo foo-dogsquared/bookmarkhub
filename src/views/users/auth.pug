@@ -1,0 +1,6 @@
+mixin show_error_list(error_object)
+    if error_object
+        .form-input-errors
+            ul
+                each value, key in error_object
+                    li #{value}

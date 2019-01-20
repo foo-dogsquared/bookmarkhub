@@ -1,5 +1,7 @@
-const user_actions = require("user_actions");
+const accounts = require("./accounts");
+const users = require("./users");
 
 module.exports = {
-    user_actions
+    users,
+    accounts
 }
