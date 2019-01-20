@@ -1,10 +1,14 @@
 const session = require('express-session');
-const MongoDBStore = require("connect-mongodb-session")(session);
+const MongoDBStore = require("connect-mongo")(session);
 const app_constants = require("./app_constants");
 
 const session_store = new MongoDBStore({
-    uri: app_constants.mongodb_db_url,
-    collection: "sessions"
-}, function(error) {if (error) return error;});
+    url: app_constants.mongodb_db_url,
+    ttl: 60 * 60 * 24 * 14,
+    collection: "sessions",
+    db: "test",
+    touchAfter: 60 * 60 * 24,
+    autoRemove: "native"
+});
 
 module.exports = session_store;
