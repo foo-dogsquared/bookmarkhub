@@ -4,7 +4,7 @@ header
             a(href="/")
                 h3.header-app-name #{app_configuration.app_icon} #{app_configuration.app_name}
         .header-navbar
-            if user_logged_in
+            if user_session_id
                 a(href=app_configuration.logout_page, class="navbar-link") Logout
             else
                 a(href=app_configuration.login_page, class="navbar-link") Login

@@ -1,11 +1,13 @@
 extends default
+include ../mixins/signup_banner
 
 block content
+    .error-block= error
     img(src="/img/book-candle-tailpiece.jpg", alt="Book on a candle tailpiece")
     h1 #{app_configuration.app_icon} #{app_configuration.app_name}
     h2 #{app_configuration.app_description}
-    p Hey there, cyberspace wanderer. I'm pretty sure you're us
-    p #{app_configuration.login} #{app_configuration.login_page}
-    .signup-prompt
-        p So what are you waiting for?
-        a(href=app_configuration.signup_page) Start sharing the knowledge now.
+    p.home-text-block Greetings, cyberspace wanderer. I'm pretty sure you're using this thing called the internet.
+    p.home-text-block Being a
+    p.home-text-block Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat, numquam repudiandae? Ut in dolore, consequuntur sit, ipsa quas consequatur autem voluptatum qui quaerat ullam harum ipsum enim laborum hic atque!
+    +signup_prompt(user_session_id)    
+    
