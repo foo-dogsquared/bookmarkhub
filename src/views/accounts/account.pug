@@ -1,0 +1,12 @@
+extends ../layout/default
+include ../mixins/bookmark_mixins
+
+block content
+    h1= user_object.username
+    h2= user_object.description
+    //- make the import bookmark interface
+    if user_object.bookmarks
+        .bookmarks-container
+            h2= user_object.bookmarks.root_name
+            +bookmark_component(user_object.bookmarks)
+    

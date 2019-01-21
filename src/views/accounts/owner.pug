@@ -1,0 +1,16 @@
+extends ../layout/default
+include ../mixins/error_banner
+include ../mixins/bookmark_mixins
+
+block content
+    +error_banner(cookies[cookies_constant.ERROR])
+    h1.profile-username= user_object.username
+    if user_object.description
+        p.profile-description= user_object.description
+    else 
+        p.profile-description You don't have a description yet. Want to screech your bio on the wall?
+    form.profile-description-edit(method="post", action=app_configuration.edit_description_uri)
+        textarea(name="description")
+        input(type="submit", value="Edit", resize="false")
+    if user_object.bookmarks
+        +bookmark_component(user_object.bookmarks)

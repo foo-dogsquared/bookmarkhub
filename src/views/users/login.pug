@@ -4,8 +4,7 @@ include auth
 block content
     h1 Login
     form(method="post")
-        if error
-            p= error
+        +show_error_message(error)        
         .form-input
             p Username
             input(type="text", name="username", required)
