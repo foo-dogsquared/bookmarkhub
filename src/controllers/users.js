@@ -45,7 +45,6 @@ function login_user(req, res, username, password) {
                 if (error) reject(new api_response(false, api_response.prototype.DB_ERROR));
                 if (!result) reject(new api_response(false, app_constants.login_error.INVALID_USERNAME_LOGIN_ERROR_MSG));
                 else {
-                    console.log(User.hash_password(password, result.salt));
                     if (User.hash_password(password, result.salt) === result.hashed_password) resolve(new api_response(true));
                     else reject(new api_response(false, app_constants.login_error.INVALID_PASSWORD_LOGIN_ERROR_MSG));
                 }
@@ -59,7 +58,6 @@ function logout_user(req, res) {
         if (!req.cookies[app_constants.cookies.USER_SESSION_ID]) reject(new api_response(false, app_constants.logout_error.INVALID_USER_STATE_LOGOUT_ERROR_MESSAGE));
 
         session_store.get(req.cookies[app_constants.cookies.USER_SESSION_ID], function(error, session) {
-            console.log(req.cookies[app_constants.cookies.USER_SESSION_ID], session);
             if (error) reject(new api_response(false, app_constants.logout_error.LOGOUT_ERROR_MESSAGE))
             if (!session) reject(new api_response(false, app_constants.logout_error.LOGOUT_ERROR_MESSAGE))
             else {
@@ -76,17 +74,19 @@ function reset_password(email_address) {
     mongoose.connect(app_constants.mongodb_db_url, {useNewUrlParser: true})
 
     return new Promise(function(resolve, reject) {
+        const db = mongoose.connection;
+        const User = mongoose.model(app_constants.mongodb_user_collection, user_schema);
+        
         db.on("error", function() {
             console.error(app_constants.MONGODB_ERROR_CONNECTION_MSG);
-            reject();
+            reject(new api_response(false, app_constants.reset_password_error.INVALID_EMAIL_ADDRESS_RESET_PASSWORD_ERROR_MSG));
         });
         db.once("open", function() {
-            const User = mongoose.model(app_constants.mongodb_user_collection, user_schema);
 
             User.findOne({email_address: email_address}, function(error, result) {
                 if (error) reject(new api_response(false, app_constants.MONGODB_ERROR_CONNECTION_MSG));
 
-                if (!result) reject(new api_response(false))
+                if (!result) reject(new api_response(false, app_constants.reset_password_error.NO_EMAIL_ADDRESS_FOUND_RESET_PASSWORD_ERROR_MSG));
                 else resolve(new api_response(true));
             });
         })
