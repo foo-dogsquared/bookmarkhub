@@ -1,15 +1,24 @@
 // Pug gives undefined for objects with reference to `this`
+// and it also might go under change so that's why they're outside of the
+// object
 const account = "/account";
 const login = "/login";
 const signup = "/signup";
 const logout = "/logout";
 const reset_password = "/reset-password";
 const reset_password_confirm = "/reset-password-confirm";
+const user = "/user";
+const profile = "/profile";
+const bookmarks_page = "/bookmarks";
+const edit_description = "/edit-description";
+const profile_page = `${account}${profile}`;
+const own_bookmarks = `${profile}${bookmarks_page}`;
 const login_page = `${login}`;
 const signup_page = `${signup}`;
 const logout_page = `${logout}`;
 const reset_password_page = `${reset_password}`;
 const reset_password_confirm_page = `${reset_password_confirm}`;
+const edit_description_uri = `${account}${edit_description}`;
 
 // the entire app configuration
 // these are mostly used for the view templates
@@ -30,18 +39,24 @@ exports.app_configuration = {
     
     // routes
     home: "/",
-    bookmarks_page: "/bookmarks",
+    bookmarks_page,
     account,
     signup,
     login,
     logout,
     reset_password,
     reset_password_confirm,
+    user,
+    profile,
+    profile_page,
+    own_bookmarks,
+    edit_description,
     signup_page,
     login_page,
     logout_page,
     reset_password_page,
     reset_password_confirm_page,
+    edit_description_uri,
     page: "/page",
     help_page: "/help",
     about_page: "/about"
@@ -50,6 +65,7 @@ exports.app_configuration = {
 // account configurations
 exports.password_minimum_length = 8;
 exports.bookmarks_maximum_size = 5242880; // 5 MB * (1024 KB / 1 MB) * (1024 B / 1 KB) 
+exports.description_maxlength = 512;
 exports.account_name_allowed_characters = /[A-Za-z0-9_]/gi;
 exports.account_name_disallowed_characters = /[^A-Za-z0-9_]/gi;
 exports.cookies = {
@@ -58,7 +74,15 @@ exports.cookies = {
     USER_SESSION_ID: "user_session_id",
     SESSION_ID: "session_id",
     MAX_AGE: 1209600000, // 14 days * (24 hours / 1 day) * (60 minutes / 1 hour) * (60 seconds / 1 minute) * (1000 milliseconds / 1 second)
-    USER_SESSION_ID_COPY: "user_session_id_copy"
+    USER_SESSION_ID_COPY: "user_session_id_copy",
+    USER_SESSION_HASH: "user_session_hash",
+    USER_SESSION_SALT: "user_session_salt",
+    USER_SESSION_VALIDATED: "user_session_validated",
+    USER_SESSION_HASH_LENGTH: 50,
+    USER_SESSION_HASH_ITERATION: 5,
+    USER_SESSION_SALT_SIZE: 10,
+    USER_SESSION_HASH_ALGO: "sha512",
+    USER_SESSION_VALIDATED_VALUE: "OK"
 }
 exports.session_data = {
     USERNAME: "username"
@@ -92,4 +116,17 @@ exports.login_error = {
 exports.logout_error = {
     LOGOUT_ERROR_MESSAGE: "Logout error.",
     INVALID_USER_STATE_LOGOUT_ERROR_MESSAGE: "You're not a user at the time of logging out."
+}
+
+exports.reset_password_error = {
+    INVALID_EMAIL_ADDRESS_RESET_PASSWORD_ERROR_MSG: "Given email was invalid.",
+    NO_EMAIL_ADDRESS_FOUND_RESET_PASSWORD_ERROR_MSG: "Given email was not found in the database."
+}
+
+// general error messages
+exports.general_error = {
+    INVALID_USER_PAGE: "Username is not valid.",
+    USER_CANNOT_BE_FOUND: "Specified user cannot be found.",
+    DESCRIPTION_CANNOT_BE_EDITED: "Description cannot be edited.",
+    DESCRIPTION_LENGTH_ERROR: "Description can only have a maximum of 512 characters."
 }
