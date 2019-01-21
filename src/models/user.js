@@ -16,6 +16,9 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    description: {
+        type: String
+    },
     salt: {
         type: String
     },
@@ -42,12 +45,28 @@ UserSchema.path("username").validate(function(username) {
         if (!username) reject();
     
         User.findOne({username: username}, function(error, result) {
-            if (error) reject();
+            if (error) reject(error);
             if (result) reject();
             else resolve();
         });
     });
 }, app_constants.signup_error.UNIQUE_USERNAME_SIGNUP_ERROR_MSG)
+
+UserSchema.path("username").validate(function(username) {
+    if (username.match(/log-?in/gi) 
+    || username.match(/sign-?up/gi) 
+    || username.match(/reset-?password/gi) 
+    || username.match(/reset-?password-?confirm/gi)
+    || username.match(/profile/gi)
+    || username.match(/user/gi)) 
+        return false;
+    else return true; 
+}, app_constants.signup_error.INVALID_USERNAME_SIGNUP_ERROR_MSG);
+
+UserSchema.path("username").validate(function(username) {
+    if (username.match(app_constants.account_name_disallowed_characters)) return false;
+    else return true;
+}, app_constants.signup_error.INVALID_CHARACTERS_ON_USERNAME_SIGNUP_ERROR_MSG);
 
 UserSchema.path("email_address").validate(function(email_address_name) {
     const User = mongoose.model("User");
@@ -68,6 +87,11 @@ UserSchema.path("email_address").validate(function(email_address_name) {
     if (email_address_name.length <= 0) return false;
     else return true;
 }, app_constants.signup_error.BLANK_EMAIL_ADDRESS_SIGNUP_ERROR_MSG)
+
+UserSchema.path("description").validate(function(description) {
+    if (description.length >= app_constants.description_maxlength) return false;
+    else return true;
+}, app_constants.general_error.DESCRIPTION_LENGTH_ERROR)
 
 UserSchema.path("hashed_password").validate(function(hashed_password) {
     if (this._password.length <= 0 && !hashed_password) return false;
