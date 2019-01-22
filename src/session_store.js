@@ -8,7 +8,8 @@ const session_store = new MongoDBStore({
     collection: "sessions",
     db: "test",
     touchAfter: 60 * 60 * 24,
-    autoRemove: "native"
+    autoRemove: "native",
+    stringify: false
 });
 
 module.exports = session_store;

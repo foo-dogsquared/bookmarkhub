@@ -9,9 +9,10 @@ const reset_password = "/reset-password";
 const reset_password_confirm = "/reset-password-confirm";
 const user = "/user";
 const profile = "/profile";
-const bookmarks_page = "/bookmarks";
+const bookmarks_page = "/submit-bookmarks";
 const edit_description = "/edit-description";
 const profile_page = `${account}${profile}`;
+const submit_bookmarks_uri = `${account}${bookmarks_page}`;
 const own_bookmarks = `${profile}${bookmarks_page}`;
 const login_page = `${login}`;
 const signup_page = `${signup}`;
@@ -39,7 +40,9 @@ exports.app_configuration = {
     
     // routes
     home: "/",
+    google_analytics_id: process.env.GOOGLE_ANALYTICS_ID,
     bookmarks_page,
+    submit_bookmarks_uri,
     account,
     signup,
     login,
@@ -59,7 +62,17 @@ exports.app_configuration = {
     edit_description_uri,
     page: "/page",
     help_page: "/help",
-    about_page: "/about"
+    about_page: "/about",
+
+    // form fields
+    form_fields: {
+        bookmarks: "bookmarks",
+        description: "description",
+        email_address: "email_address",
+        password: "password",
+        username: "username",
+        confirm_password: "confirm_password"
+    }
 }
 
 // account configurations
@@ -93,6 +106,11 @@ exports.mongodb_db_url = process.env.MONGODB_URL || "mongodb://localhost:27017/t
 exports.mongodb_user_collection = "User";
 exports.MONGODB_ERROR_CONNECTION_MSG = "Database connection error.";
 
+exports.verification_email_settings = {
+    subject: "Welcome to bookmarkhub!",
+    html: `<h1>Hello and thank you for using bookmarkhub! 😁</h1><p>Now verify your account by clicking the following link: </p>`
+}
+
 // signup error messages
 exports.signup_error = {
     UNIQUE_EMAIL_ADDRESS_SIGNUP_ERROR_MSG: "Email address already exists.",
@@ -102,14 +120,16 @@ exports.signup_error = {
     BLANK_PASSWORD_SIGNUP_ERROR_MSG: "Password cannot be blank.", 
     UNIQUE_USERNAME_SIGNUP_ERROR_MSG: "Username already exists.",
     INVALID_USERNAME_SIGNUP_ERROR_MSG: "You cannot set the specified username.",
-    INVALID_CHARACTERS_ON_USERNAME_SIGNUP_ERROR_MSG: "Username must only have alphanumeric characters and underscores."
+    INVALID_CHARACTERS_ON_USERNAME_SIGNUP_ERROR_MSG: "Username must only have alphanumeric characters and underscores.",
+    CONFIRM_PASSWORD_DOES_NOT_MATCH_INPUT_PASSWORD_SIGNUP_ERROR_MSG: "Confirm password does not match your password input."
 }
 
 // login error messages
 exports.login_error = {
     INVALID_USERNAME_LOGIN_ERROR_MSG: "Found no such username in the database.",
     INVALID_PASSWORD_LOGIN_ERROR_MSG: "Password does not match with the username.",
-    SERVER_LOGIN_ERROR: "There's a problem with the server."
+    SERVER_LOGIN_ERROR: "There's a problem with the server.",
+    ACCOUNT_NOT_CONFIRMED_LOGIN_ERROR_MSG: "Credentials match but you're not verified. Have you opened your verification email yet?"
 }
 
 // logout error messages
@@ -128,5 +148,14 @@ exports.general_error = {
     INVALID_USER_PAGE: "Username is not valid.",
     USER_CANNOT_BE_FOUND: "Specified user cannot be found.",
     DESCRIPTION_CANNOT_BE_EDITED: "Description cannot be edited.",
-    DESCRIPTION_LENGTH_ERROR: "Description can only have a maximum of 512 characters."
+    DESCRIPTION_LENGTH_ERROR: "Description can only have a maximum of 512 characters.",
+    DESCRIPTION_INVALID_ERROR_MSG: "Description must contain at least one non-whitespace character."
+}
+
+exports.bookmark_error = {
+    INVALID_BOOKMARKS_ERROR_MSG: "Bookmark file is not valid.",
+    MAXIMUM_BOOKMARK_SIZE_LIMIT_ERROR_MSG: `Maximum bookmark size allowed is up to 5 MB.`,
+    INVALID_NETSCAPE_HTML_BOOKMARK_ERROR_MSG: "HTML file is not in Netscape or Pocket format.",
+    INVALID_BROWSER_BOOKMARK_JSON_ERROR_MSG: "JSON file is not in valid bookmark format.",
+    NO_FILE_MSG_ERROR: "Think you can pass without a file? Ha! Not so fast... 😁"
 }
