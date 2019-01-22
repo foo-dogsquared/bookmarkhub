@@ -89,14 +89,11 @@ home_router.get(app_configuration.signup, function(req, res) {
 });
 
 home_router.post(app_configuration.signup, function(req, res) {
-    controller.users.register_user(req, res, req.body.username, req.body.email_address, req.body.password)
-    .then(function() {
-        set_cookies_and_session_data(req, res);
-        
+    controller.users.register_user(req, res, req.body[app_configuration.form_fields.username], req.body[app_configuration.form_fields.email_address], req.body[app_configuration.form_fields.password], req.body[app_configuration.form_fields.confirm_password])
+    .then(function() {        
         res.redirect(app_configuration.home);
     })
     .catch(function(error) {
-        console.log(error);
         const error_messages = {};
         if (error) {
             for (const field in error.extra.errors) {error_messages[field] = error.extra.errors[field].message;}
@@ -136,7 +133,7 @@ home_router.get(app_configuration.reset_password, function(req, res) {
 });
 
 home_router.post(app_configuration.reset_password, function(req, res) {
-    controller.users.reset_password(req.body.email_address)
+    controller.users.reset_password(req.body[app_configuration.form_fields.email_address])
     .then(
         // if successful, send the email 
         // generate a token to be used for the reset password confirm page
