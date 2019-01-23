@@ -36,7 +36,12 @@ function html_dom_to_json(bookmark_item_dom, object = {}) {
         if (node.children.length > 0 && node.nodeName === "DT") {
             // the base case: when the bookmark item is a link
             const bookmark_item_node = node.children[0];
-            if (bookmark_item_node.nodeName === "A") object[bookmark_item_node.textContent] = bookmark_item_node.href; 
+            if (bookmark_item_node.nodeName === "A") {
+                const bookmark_href = bookmark_item_node.href;
+                const protocol = bookmark_href.split(":")[0];
+                if (protocol === "http" || protocol === "https" || protocol === "ftp") object[bookmark_item_node.textContent] = bookmark_href;
+                else continue;
+            }
             else if (bookmark_item_node.nodeName === "H3") {
                 object[bookmark_item_node.textContent] = {};
                 if (!node.children[1]) continue;
