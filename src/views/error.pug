@@ -1,9 +1,18 @@
-mixin error(res)
-    h2 #{res.statusCode}
-    h4 #{res.statusMessage}
-    if (res.statusCode[0] === 5)
-        p Come back later. Might be my server being fried or something.
-    else if (res.statusCode[0] === 4)
-        p Oof. Tough luck there, bud. Try reloading it.
+extends ./layout/default
+
+block content
+    h1 #{res.statusCode}
+    if (res.statusCode === 500)
+        h2 Internal Server Error
+        p Come back later. Might be my server being fried or something. Or just my bad code...
+        p Either way, you can #[a(href=app_configuration.author_link, target="_blank") tell me about it]. 
+    else if (res.statusCode === 404)
+        h2 Resource Cannot Be Found
+        strong Hey there! Welcome to the unknown place or something. 
+        p While you're here, why don't you visit #[a(href=app_configuration.author_link, target="_blank") the creator of this abomination]?
+    else if (res.statusCode === 401)
+        h2 Unauthorized
+        p Sorry buddy, you're not getting passed here until you #[a(href=app_configuration.login_page) log in] or #[a(href=app_configuration.signup_page) sign up].
     else
+        h2 Ooooh... Some error I didn't catch yet
         p UNKNOWN ERROR? Maybe... Probably...

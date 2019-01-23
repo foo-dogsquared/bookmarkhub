@@ -1,6 +1,5 @@
 const express = require('express');
 const session = require('express-session');
-const cors = require('cors');
 const helmet = require('helmet');
 const cookie_parser = require("cookie-parser");
 const nanoid_generate = require("nanoid/generate");
@@ -14,15 +13,13 @@ const session_store = require("./session_store");
 
 const app = express();
 
-console.log(app_constants.mongodb_db_url);
-
 app
     .use(helmet())
-    .use(express.json())
     .set("views", path.join(__dirname, "views"))
     .set("view engine", "pug")
     .use(logger("dev"))
     .use(express.static(path.join(__dirname, "../public")))
+    .use(express.json())
     .use(express.urlencoded({extended: true}))
     .use(cookie_parser())
     .use(session({
@@ -30,38 +27,40 @@ app
             secure: true,
             maxAge: app_constants.cookies.MAX_AGE
         },
-        genid: function(req) {return "_" + nanoid_generate(nanoid_url_friendly_alphabet, 45)},
+        genid: function(req) {return "_" + nanoid_generate(nanoid_url_friendly_alphabet, 64)},
         saveUninitialized: false,
         secret: process.env.COOKIE_SECRET,
         resave: true,
         store: session_store,
     }))
-    .use("*", function(req, res, next) {
+    .use(function(req, res, next) {
         if (req.cookies[app_constants.cookies.ERROR]) res.clearCookie(app_constants.cookies.ERROR);
         res.cookie(app_constants.cookies.SESSION_ID, req.sessionID);
         if (req.cookies[app_constants.cookies.USER_SESSION_ID]) res[app_constants.cookies.USER_SESSION_ID_COPY] = req.cookies[app_constants.cookies.USER_SESSION_ID];
         next();
     })
     .use(app_constants.app_configuration.home, bookmarkhub_router.home)
-    .use(app_constants.app_configuration.page, bookmarkhub_router.page)
     .use(app_constants.app_configuration.account, bookmarkhub_router.account)
-    .use(app_constants.app_configuration.bookmarks_page, bookmarkhub_router.bookmark)
-    .use("*", function(req, res, next) {
-        console.log(res[app_constants.cookies.USER_SESSION_ID_COPY]);
-        if (res[app_constants.cookies.USER_SESSION_ID_COPY] && (res[app_constants.cookies.USER_SESSION_ID_COPY] !== req.cookies[app_constants.cookies.USER_SESSION_ID] || !req.cookies[app_constants.cookies.USER_SESSION_ID])) {
-            console.log("Is it here?");
-            session_store.destroy(res[app_constants.cookies.USER_SESSION_ID_COPY], function(error) {
-                if (error) {
-                    console.log("It fails.");
-                    res.cookie(app_constants.cookies.ERROR, error)
-                    res.redirect(app_constants.app_configuration.home);
-                }
-            })
-        }
-        next();
+    .use(app_constants.app_configuration.user, bookmarkhub_router.user)
+    .use("*", function(req, res) {
+        if (!res.statusCode || Math.floor(res.statusCode / 100) === 2) res.status(404);
+        res.render("error", {
+            title: res.statusCode,
+            app_configuration: app_constants.app_configuration, 
+            res,
+            cookies: req.cookies,
+            cookies_constant: app_constants.cookies
+        });
     })
-    .use("*", function(req, res, next) {
-        if (req.statusCode === 404) res.render("error", res);
+    .use("*", function(error, req, res, next) {
+        console.error(error.stack);
+        res.status(500).render("error", {
+            title: res.statusCode,
+            app_configuration: app_constants.app_configuration,
+            res,
+            cookies: req.cookies,
+            cookies_constant: app_constants.cookies
+        })
     })
-    
+
 module.exports = app;

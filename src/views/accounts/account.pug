@@ -1,0 +1,18 @@
+extends ../layout/default
+include ../mixins/bookmark_mixins
+include ../mixins/signup_banner
+
+block content
+    h1= user_object.username
+    if user_object.description
+        h2= user_object.description
+    else
+        p It looks like they don't have a description yet...
+    //- make the import bookmark interface
+    if user_object.bookmarks
+        .bookmarks-container
+            h2= user_object.bookmarks.root_name
+            +bookmark_component(user_object.bookmarks)
+    else
+        p It seems like they don't have saved bookmarks yet.
+    +signup_prompt(cookies[cookies_constant.USER_SESSION_ID])

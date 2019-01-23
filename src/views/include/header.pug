@@ -4,8 +4,9 @@ header
             a(href="/")
                 h3.header-app-name #{app_configuration.app_icon} #{app_configuration.app_name}
         .header-navbar
-            if user_session_id
+            if cookies[cookies_constant.USER_SESSION_ID]
                 a(href=app_configuration.logout_page, class="navbar-link") Logout
+                a(href=app_configuration.account + app_configuration.profile, class="navbar-link") Profile
             else
                 a(href=app_configuration.login_page, class="navbar-link") Login
                 a(href=app_configuration.signup_page, class="navbar-link") Signup
