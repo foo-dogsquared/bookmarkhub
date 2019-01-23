@@ -7,6 +7,8 @@ const app_constants = require("../app_constants");
 const controller = require("../controllers/index");
 const cryptokeys = require("../cryptokeys");
 const fs = require("fs");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv").config();
 
 account_router.get(app_configuration.profile, function(req, res, next) {
     controller.accounts.check_for_session(req)

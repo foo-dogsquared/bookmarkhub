@@ -90,11 +90,12 @@ home_router.get(app_configuration.signup, function(req, res) {
 
 home_router.post(app_configuration.signup, function(req, res) {
     controller.users.register_user(req, res, req.body[app_configuration.form_fields.username], req.body[app_configuration.form_fields.email_address], req.body[app_configuration.form_fields.password], req.body[app_configuration.form_fields.confirm_password])
-    .then(function() {        
-        res.redirect(app_configuration.home);
+    .then(function() {
+        res.redirect(app_configuration.verification_email_sent_page);
     })
     .catch(function(error) {
         const error_messages = {};
+        console.log(error);
         if (error) {
             for (const field in error.extra.errors) {error_messages[field] = error.extra.errors[field].message;}
             res.cookie(app_constants.cookies.ERROR, JSON.stringify(error_messages));
@@ -103,6 +104,37 @@ home_router.post(app_configuration.signup, function(req, res) {
         res.redirect(app_configuration.signup_page);
     });
 });
+
+home_router.get(app_configuration.verification_email_sent_page, function(req, res, next) {
+    console.log(req.originalUrl, req.method, req.statusCode);
+    if (req.originalUrl === app_configuration.verification_email_sent_page) res.redirect(app_configuration.home);
+    else if (req.method !== "POST" && req.originalUrl !== app_configuration.signup_page) res.redirect(req.originalUrl);
+    else {
+        res.render("users/verification_email_sent", {
+            title: "Verification email sent",
+            app_configuration,
+            cookies: req.cookies,
+            cookies_constant: app_constants.cookies,
+            error: req.cookies[app_constants.cookies.ERROR]
+        })
+    }
+})
+
+home_router.get(`${app_configuration.account_confirmation}/:jwt`, function(req, res, next) {
+    controller.users.verify_account(req, res, req.params.jwt)
+    .then(function() {
+        res.render("accounts/verification_success", {
+            title: "Verification success!",
+            app_configuration,
+            cookies: req.cookies,
+            cookies_constant: app_constants.cookies
+        });
+    })
+    .catch(function(error) {
+        res.cookie(app_constants.cookies.ERROR, error.extra);
+        res.redirect(app_configuration.home);
+    })
+})
 
 home_router.get(app_configuration.logout, function(req, res) {
     controller.users.logout_user(req, res)
@@ -127,17 +159,20 @@ home_router.get(app_configuration.reset_password, function(req, res) {
         res.render("users/reset_password", {
             title: "Reset password",
             app_configuration,
-            error: req.cookies[app_constants.cookies.ERROR]
+            error: req.cookies[app_constants.cookies.ERROR],
+            cookies: req.cookies,
+            cookies_constant: app_constants.cookies
         })
     }
 });
 
 home_router.post(app_configuration.reset_password, function(req, res) {
-    controller.users.reset_password(req.body[app_configuration.form_fields.email_address])
+    controller.users.reset_password(req, res, req.body[app_configuration.form_fields.email_address])
     .then(
         // if successful, send the email 
         // generate a token to be used for the reset password confirm page
         // when the reset process was successful, the page will close down
+        res.redirect(app_configuration.home)
         
     )
     .catch(function(error) {
@@ -153,5 +188,38 @@ home_router.post(app_configuration.reset_password, function(req, res) {
 // * If it expires, the page will be nonexistent and cannot be accessed anymore until such a case that the same token was generated
 // * If the password replacement process on the password confirm page was successsful, the page will also be closed
 // * There should be another email to be sent confirming the password reset 
+home_router.get(`${app_configuration.reset_password_confirm}/:jwt`, function(req, res, next) {
+    controller.users.verify_password_token(req, res, req.params.jwt)
+    .then(function(decoded_string) {
+        // when reset password confirmation process is successful
+        res.render("users/reset_password_confirm", {
+            title: "Reset the password (for sure)",
+            app_configuration,
+            cookies: req.cookies,
+            cookies_constant: app_constants.cookies
+        })
+    })
+    .catch(function(error) {
+        // otherwise
+        res.render("users/reset_password_confirm_fail", {
+            title: error.extra,
+            app_configuration,
+            cookies: req.cookies,
+            cookies_constant: app_constants.cookies,
+            token_error_message: error.extra
+        })
+    })
+})
+
+home_router.post(`${app_configuration.reset_password_confirm}/:jwt`, function(req, res, next) {
+    controller.users.reset_password_confirm(req, res, req.params.jwt)
+    .then(function() {
+        res.redirect(app_configuration.home);
+    })
+    .catch(function(error) {
+        res.cookie(app_constants.cookies.ERROR, error.extra);
+        res.redirect(app_configuration.home)
+    })
+})
 
 module.exports = home_router;
