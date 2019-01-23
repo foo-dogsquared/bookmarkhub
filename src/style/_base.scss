@@ -16,7 +16,6 @@ body {
     box-sizing: content-box;
 }
 
-
 header {
     background: url("/img/dark-wood.jpg");
 
@@ -83,4 +82,9 @@ input[type="url"], input[type="email"], input[type="search"] {
 input[type="button"], input[type="reset"],
 button {
 
+}
+
+textarea {
+    width: 100%;
+    resize: none;
 }

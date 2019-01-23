@@ -8,18 +8,21 @@
     height: 100%;
     padding: ($base-margin-width);
 
-    @media screen and (max-width: $on-phone) {padding: 1em;}
+    @media screen and (max-width: $on-tablet) {
+        > * {margin: ($base-margin-width/2) auto}
+        flex-flow: column wrap;
+        padding: 1em;
+    }
 }
 
 .header-app-titlebox {
-    @media screen and (max-width: $on-phone) {margin: 0 auto; text-align: center;}
+    h3.header-app-name {margin: 0;}
+    a {text-decoration: none;}
 }
 
 .header-navbar {
     display: flex;
     flex-flow: row nowrap;
-
-    @media screen and (max-width: $on-phone) {margin: $base-margin-width auto;}
 }
 
 .navbar-link {
@@ -59,8 +62,9 @@
 
 .social-icons {
     width: 32px;
-    height: auto;
+    height: 32px;
     fill: white;
+    margin: 0 $base-margin-width;
 }
 
 .signup-prompt {
