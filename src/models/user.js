@@ -150,6 +150,10 @@ UserSchema.static("hash_password", function(password, salt) {
     return hash_buffer.toString("hex");
 });
 
+UserSchema.static("generate_salt", function(bits) {
+    return crypto.randomBytes(bits).toString("hex");
+});
+
 UserSchema.static("find_by_username", function(name, callback) {
     return this.find({username: name}, callback(err, result));
 });
