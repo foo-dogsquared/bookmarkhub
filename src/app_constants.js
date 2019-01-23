@@ -1,3 +1,4 @@
+const dotenv = require("dotenv").config();
 // Pug gives undefined for objects with reference to `this`
 // and it also might go under change so that's why they're outside of the
 // object
@@ -11,6 +12,7 @@ const user = "/user";
 const profile = "/profile";
 const bookmarks_page = "/submit-bookmarks";
 const edit_description = "/edit-description";
+const account_confirmation = "/confirmation";
 const profile_page = `${account}${profile}`;
 const submit_bookmarks_uri = `${account}${bookmarks_page}`;
 const own_bookmarks = `${profile}${bookmarks_page}`;
@@ -20,6 +22,8 @@ const logout_page = `${logout}`;
 const reset_password_page = `${reset_password}`;
 const reset_password_confirm_page = `${reset_password_confirm}`;
 const edit_description_uri = `${account}${edit_description}`;
+const account_confirmation_uri = `${account}${account_confirmation}`;
+const verification_email_sent_page = "/verify-email-sent"
 
 // the entire app configuration
 // these are mostly used for the view templates
@@ -32,6 +36,7 @@ exports.app_configuration = {
         github: "https://github.com/foo-dogsquared",
         twitter: "https://twitter.com/foo_dogsquared"
     },
+    app_link: (process.env.NODE_ENV === "development") ? "http://localhost:8989" : process.env.APP_LINK,
     app_name: "bookmarkhub",
     app_icon: "📖",
     app_description: "A bookmark sharing site or something...",
@@ -50,6 +55,7 @@ exports.app_configuration = {
     reset_password,
     reset_password_confirm,
     user,
+    account_confirmation,
     profile,
     profile_page,
     own_bookmarks,
@@ -60,6 +66,8 @@ exports.app_configuration = {
     reset_password_page,
     reset_password_confirm_page,
     edit_description_uri,
+    account_confirmation_uri,
+    verification_email_sent_page,
     page: "/page",
     help_page: "/help",
     about_page: "/about",
@@ -83,6 +91,7 @@ exports.account_name_allowed_characters = /[A-Za-z0-9_]/gi;
 exports.account_name_disallowed_characters = /[^A-Za-z0-9_]/gi;
 exports.cookies = {
     ERROR: "error",
+    SUCCESS: "success",
     USER_LOGGED_IN: "user_logged_in",
     USER_SESSION_ID: "user_session_id",
     SESSION_ID: "session_id",
@@ -106,11 +115,6 @@ exports.mongodb_db_url = process.env.MONGODB_URL || "mongodb://localhost:27017/t
 exports.mongodb_user_collection = "User";
 exports.MONGODB_ERROR_CONNECTION_MSG = "Database connection error.";
 
-exports.verification_email_settings = {
-    subject: "Welcome to bookmarkhub!",
-    html: `<h1>Hello and thank you for using bookmarkhub! 😁</h1><p>Now verify your account by clicking the following link: </p>`
-}
-
 // signup error messages
 exports.signup_error = {
     UNIQUE_EMAIL_ADDRESS_SIGNUP_ERROR_MSG: "Email address already exists.",
@@ -121,7 +125,15 @@ exports.signup_error = {
     UNIQUE_USERNAME_SIGNUP_ERROR_MSG: "Username already exists.",
     INVALID_USERNAME_SIGNUP_ERROR_MSG: "You cannot set the specified username.",
     INVALID_CHARACTERS_ON_USERNAME_SIGNUP_ERROR_MSG: "Username must only have alphanumeric characters and underscores.",
-    CONFIRM_PASSWORD_DOES_NOT_MATCH_INPUT_PASSWORD_SIGNUP_ERROR_MSG: "Confirm password does not match your password input."
+    CONFIRM_PASSWORD_DOES_NOT_MATCH_INPUT_PASSWORD_SIGNUP_ERROR_MSG: "Confirm password does not match your password input.",
+    UNKNOWN_VALIDATION_ERROR_MSG: "Validation has gone wrong for unknown reasons.",
+    UNKNOWN_MAIL_SENDING_ERROR_MSG: "Verification e-mail has failed to send.",
+    EXPIRED_TOKEN_SIGNUP_ERROR_MSG: "Token has expired. Please sign up again.",
+    MALFORMED_TOKEN_SIGNUP_ERROR_MSG: "Token has malformed.",
+    NOT_BEFORE_ERROR_TOKEN_SIGNUP_ERROR_MSG: "Current claiming time is when the token is not active.",
+    ACCOUNT_VERIFICATION_SUCCESSFUL: "Your account has been verified! Thank you for trying this little program of mine. 😊",
+    GENERIC_INVALID_VERIFICATION_PROCESS_ERROR_MSG: "Verification process has gone wrong.",
+    UNKNOWN_SIGNUP_ERROR: "Some error has occured. Please contact the support."
 }
 
 // login error messages
@@ -138,9 +150,22 @@ exports.logout_error = {
     INVALID_USER_STATE_LOGOUT_ERROR_MESSAGE: "You're not a user at the time of logging out."
 }
 
+// reset password error messages
 exports.reset_password_error = {
     INVALID_EMAIL_ADDRESS_RESET_PASSWORD_ERROR_MSG: "Given email was invalid.",
-    NO_EMAIL_ADDRESS_FOUND_RESET_PASSWORD_ERROR_MSG: "Given email was not found in the database."
+    NO_EMAIL_ADDRESS_FOUND_RESET_PASSWORD_ERROR_MSG: "Given email was not found in the database.",
+    SENDING_PASSWORD_RESET_EMAIL_FAIL_ERROR_MSG: "Sending of the password reset email has failed. Please try again.",
+    PASSWORD_LENGTH_RESET_PASSWORD_ERROR_MSG: "Length of the new password should at least 8 characters.",
+    CONFIRM_PASSWORD_MISMATCH_RESET_ERROR_MSG: "Confirm password field value does not match your password.",
+    EXPIRED_PASSWORD_RESET_TOKEN_ERROR_MSG: "Password reset token has been expired. Please claim another one by going to the password reset page again.",
+    MALFORMED_PASSWORD_RESET_TOKEN_ERROR_MSG: "Password reset token has been corrupted.",
+    NOT_BEFORE_RESET_ERROR_TOKEN_ERROR_MSG: "Password reset token has been claimed before the token is active.",
+    UNKNOWN_RESET_PASSWORD_TOKEN_ERROR: "Password reset token process has unknown errors."
+}
+
+// reset password success messages
+exports.reset_password_success = {
+    RESET_PASSWORD_CONFIRM_SUCCESS: "Reset password process has been successful."
 }
 
 // general error messages
@@ -158,4 +183,36 @@ exports.bookmark_error = {
     INVALID_NETSCAPE_HTML_BOOKMARK_ERROR_MSG: "HTML file is not in Netscape or Pocket format.",
     INVALID_BROWSER_BOOKMARK_JSON_ERROR_MSG: "JSON file is not in valid bookmark format.",
     NO_FILE_MSG_ERROR: "Think you can pass without a file? Ha! Not so fast... 😁"
+}
+
+exports.nodemailer_settings = {
+    transporter: {
+        service: "gmail",
+        auth: {
+            user: process.env.SUPPORT_EMAIL,
+            pass: process.env.SUPPORT_EMAIL_PASSWORD
+        }
+    },
+    verification_initialization_email_subject: "Welcome to bookmarkhub!",
+    verification_initialization_email_html: `<h1>Hello and thank you for using bookmarkhub! 😁</h1><p>Now verify your account by clicking the following link: </p>`,
+    verification_success_email_subject: "Verification success!",
+    verification_success_email_html: "<h1>Your account has been verified! 😁</h1><p>Now you are truly welcome to bookmarkhub. Don't forget to share this with your friends or somebody who might need it or just someone.</p>",
+    password_reset_token_email_subject: function(app_name) {return `${app_name} Password Token Request`} ,
+    password_reset_token_email_html: "<p>Just click the following link to confirm the reset of your password. Make sure to make it more memorable this time. 🙂</p><p>Also take note that the link is only valid for an hour.</p>",
+    password_reset_success_email_subject: function(app_name) {return `${app_name} Password Reset Success`},
+    password_reset_success_email_html: "<p>Nicely done!</p><p>Hope you continue using my project!</p>",
+    email_options: function(email_from, email_to, subject, html) {
+        return {
+            from: email_from,
+            to: email_to,
+            subject,
+            html
+        }
+    },
+    created_by: function(author, author_link) {
+        return `<a href=${author_link}>${author}</a>`;
+    },
+    check_out_author_other_project: function(author, author_link) {
+        return `<p>On that note, why don't you check out <a href=${author_link}>${author}</a>'s other projects? 😁`
+    }
 }

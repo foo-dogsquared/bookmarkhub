@@ -40,9 +40,7 @@ app
         next();
     })
     .use(app_constants.app_configuration.home, bookmarkhub_router.home)
-    .use(app_constants.app_configuration.page, bookmarkhub_router.page)
     .use(app_constants.app_configuration.account, bookmarkhub_router.account)
-    .use(app_constants.app_configuration.bookmarks_page, bookmarkhub_router.bookmark)
     .use(app_constants.app_configuration.user, bookmarkhub_router.user)
     .use("*", function(req, res) {
         if (!res.statusCode || Math.floor(res.statusCode / 100) === 2) res.status(404);
