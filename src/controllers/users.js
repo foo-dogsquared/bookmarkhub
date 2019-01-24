@@ -26,7 +26,10 @@ function send_verification_mail(req, res, username, email_address) {
                     from: process.env.SUPPORT_EMAIL,
                     to: email_address,
                     subject: app_constants.nodemailer_settings.verification_initialization_email_subject,
-                    html: `${app_constants.nodemailer_settings.verification_initialization_email_html} <a href=${encoded_url}>${encoded_url}</a>`
+                    html: `${app_constants.nodemailer_settings.verification_initialization_email_html} 
+                            <a href=${encoded_url}>${encoded_url}</a>
+                            <hr>
+                            <p>Created by ${app_constants.nodemailer_settings.created_by(app_constants.app_configuration.author, app_constants.app_configuration.author_link)}</p>`
                 }
 
                 transporter.sendMail(mail_options, function(error, info) {
@@ -58,7 +61,7 @@ function verify_account(req, res, web_token) {
                                     User.deleteOne({username: decoded_string.username}, function(error, result) {
                                         if (error) return reject(new api_response(false, app_constants.MONGODB_ERROR_CONNECTION_MSG));
                                         if (!result) return reject(new api_response(false, app_constants.general_error.USER_CANNOT_BE_FOUND));
-                                        else return resolve(new api_response(true));
+                                        else return reject(new api_response(false, app_constants.signup_error.EXPIRED_TOKEN_SIGNUP_ERROR_MSG));
                                     })
                                 }
                                 else return resolve(new api_response(true));
@@ -78,7 +81,6 @@ function verify_account(req, res, web_token) {
                     const User = mongoose.model(app_constants.mongodb_user_collection, user_schema);
 
                     User.findOneAndUpdate({username: decoded_string.username}, {confirmed: true}, function(error, doc, result) {
-                        console.log(error, doc, result);
                         if (error) return reject(new api_response(false, app_constants.signup_error.UNKNOWN_VALIDATION_ERROR_MSG));
                         if (!doc) return reject(new api_response(false, app_constants.general_error.USER_CANNOT_BE_FOUND));
                         else {
@@ -94,7 +96,9 @@ function verify_account(req, res, web_token) {
                                 from: process.env.SUPPORT_EMAIL,
                                 to: doc.email_address,
                                 subject: app_constants.nodemailer_settings.verification_success_email_subject,
-                                html: `${app_constants.nodemailer_settings.verification_success_email_html}${app_constants.nodemailer_settings.created_by(app_constants.app_configuration.author, app_constants.app_configuration.author_link)}`
+                                html: `${app_constants.nodemailer_settings.verification_success_email_html}
+                                        <hr>
+                                        <p> Created by ${app_constants.nodemailer_settings.created_by(app_constants.app_configuration.author, app_constants.app_configuration.author_link)}</p>`
                             }
 
                             transporter.sendMail(mail_options, function(error, info) {
@@ -116,7 +120,7 @@ function register_user(req, res, username, email_address, password, confirm_pass
     return new Promise(function(resolve, reject) {
         const db = mongoose.connection;
         db.on("error", function() {
-            console.error.bind("Connection error.")
+            console.error("Connection error.")
             return reject(new api_response(false, {errors: {database: {message: api_response.prototype.DB_ERROR}}}));
         });
         db.once("open", function() {
@@ -145,12 +149,15 @@ function login_user(req, res, username, password) {
     mongoose.connect(mongodb_db_url, {useNewUrlParser: true});
 
     return new Promise(function(resolve, reject) {
+        if (username.length <= 0) return reject(new api_response(false, app_constants.login_error.BLANK_USERNAME_LOGIN_ERROR_MSG));
+        if (password.length <= 0) return reject(new api_response(false, app_constants.login_error.BLANK_PASSWORD_LOGIN_ERROR_MSG));
+
         const User = mongoose.model(mongodb_user_collection, user_schema);
 
         const db = mongoose.connection;
 
         db.on("error", function() {
-            console.error.bind("Connection error");
+            console.error("Connection error");
             return reject(new api_response(false, api_response.prototype.DB_ERROR));
         });
         db.once("open", function() {
@@ -190,17 +197,19 @@ function reset_password(req, res, email_address) {
     mongoose.connect(app_constants.mongodb_db_url, {useNewUrlParser: true})
 
     return new Promise(function(resolve, reject) {
+        if (email_address.length <= 0) return reject(new api_response(false, app_constants.reset_password_error.BLANK_EMAIL_ADDRESS_RESET_PASSWORD_ERROR_MSG));
+        else if (!email_validator.validate(email_address)) return reject(new api_response(false, app_constants.reset_password_error.INVALID_EMAIL_ADDRESS_RESET_PASSWORD_ERROR_MSG));
         const db = mongoose.connection;
         const User = mongoose.model(app_constants.mongodb_user_collection, user_schema);
         
         db.on("error", function() {
             console.error(app_constants.MONGODB_ERROR_CONNECTION_MSG);
-            return reject(new api_response(false, app_constants.reset_password_error.INVALID_EMAIL_ADDRESS_RESET_PASSWORD_ERROR_MSG));
+            return reject(new api_response(false, app_constants.MONGODB_ERROR_CONNECTION_MSG));
         });
         db.once("open", function() {
 
             User.findOne({email_address: email_address}, function(error, result) {
-                if (error) return reject(new api_response(false, app_constants.MONGODB_ERROR_CONNECTION_MSG));
+                if (error) return reject(new api_response(false, app_constants.reset_password_error.INVALID_EMAIL_ADDRESS_RESET_PASSWORD_ERROR_MSG));
 
                 if (!result) return reject(new api_response(false, app_constants.reset_password_error.NO_EMAIL_ADDRESS_FOUND_RESET_PASSWORD_ERROR_MSG));
                 else {
@@ -285,8 +294,9 @@ function reset_password_confirm(req, res, web_token) {
     mongoose.connect(app_constants.mongodb_db_url, {useNewUrlParser: true});
     
     return new Promise(function(resolve, reject) {
-        console.log(req.body)
-        if (req.body.password.length < app_constants.password_minimum_length) return reject(new api_response(false, app_constants.reset_password_error.PASSWORD_LENGTH_RESET_PASSWORD_ERROR_MSG));
+        if (req.body.password.length <= 0) return reject(new api_response(false, app_constants.reset_password_error.BLANK_PASSWORD_RESET_ERROR_MSG))
+        else if (req.body.password.length < app_constants.password_minimum_length) return reject(new api_response(false, app_constants.reset_password_error.PASSWORD_LENGTH_RESET_PASSWORD_ERROR_MSG));
+        else if (req.body.password.length > app_constants.password_maximum_length) return reject(new api_response(false, app_constants.reset_password_error.MAXIMUM_PASSWORD_LENGTH_RESET_ERROR_MSG));
         else if (req.body.password !== req.body.confirm_password) return reject(new api_response(false, app_constants.reset_password_error.CONFIRM_PASSWORD_MISMATCH_RESET_ERROR_MSG));
         jwt.verify(web_token, process.env.PASSWORD_RESET_TOKEN_SECRET, function(error, decoded_string) {
             if (decoded_string.username && decoded_string.email_address) {

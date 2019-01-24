@@ -11,7 +11,7 @@ try {
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: true
+        required: true,
     },
     email_address: {
         type: String,
@@ -49,6 +49,16 @@ UserSchema.virtual(app_constants.app_configuration.form_fields.confirm_password)
 
 // Validations
 UserSchema.path("username").validate(function(username) {
+    if (username.length <= 0) return false;
+    else return true;
+}, app_constants.signup_error.BLANK_USERNAME_SIGNUP_ERROR_MSG);
+
+UserSchema.path("username").validate(function(username) {
+    if (username.length > app_constants.username_maximum_length) return false
+    return true;
+}, app_constants.signup_error.MAXIMUM_USERNAME_LENGTH_SIGNUP_ERROR_MSG);
+
+UserSchema.path("username").validate(function(username) {
     const User = mongoose.model("User");
 
     return new Promise(function(resolve, reject) {
@@ -60,17 +70,13 @@ UserSchema.path("username").validate(function(username) {
             else resolve();
         });
     });
-}, app_constants.signup_error.UNIQUE_USERNAME_SIGNUP_ERROR_MSG)
+}, app_constants.signup_error.UNIQUE_USERNAME_SIGNUP_ERROR_MSG);
 
 UserSchema.path("username").validate(function(username) {
-    if (username.match(/log-?in/gi) 
-    || username.match(/sign-?up/gi) 
-    || username.match(/reset-?password/gi) 
-    || username.match(/reset-?password-?confirm/gi)
-    || username.match(/profile/gi)
-    || username.match(/user/gi)) 
-        return false;
-    else return true; 
+    for (const invalid_username of app_constants.invalid_usernames) {
+        if (username.match(new RegExp(`^${invalid_username.slice(1)}$`, "gi"))) return false;
+    }
+    return true;
 }, app_constants.signup_error.INVALID_USERNAME_SIGNUP_ERROR_MSG);
 
 UserSchema.path("username").validate(function(username) {
@@ -127,6 +133,11 @@ UserSchema.path("hashed_password").validate(function(hashed_password) {
     if (this._password !== this._confirm_password) return false;
     else return true;
 }, app_constants.signup_error.CONFIRM_PASSWORD_DOES_NOT_MATCH_INPUT_PASSWORD_SIGNUP_ERROR_MSG);
+
+UserSchema.path("hashed_password").validate(function(hashed_password) {
+    if (this._password.length > app_constants.password_maximum_length) return false;
+    else return true;
+}, app_constants.signup_error.MAXIMUM_PASSWORD_LENGTH_SIGNUP_ERROR_MSG);
 
 // Methods
 UserSchema.method("generate_salt", function(bits) {

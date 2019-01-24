@@ -69,7 +69,6 @@ home_router.post(app_configuration.login, function(req, res) {
         res.redirect(app_configuration.home);
     })
     .catch(function(error) {
-        console.log(error);
         res.cookie(app_constants.cookies.ERROR, error.extra);
         
         res.redirect(app_configuration.login_page);
@@ -83,6 +82,7 @@ home_router.get(app_configuration.signup, function(req, res) {
         title: "Sign Up",
         app_configuration,
         error: error_message,
+        success: req.cookies[app_constants.cookies.SUCCESS],
         cookies: req.cookies,
         cookies_constant: app_constants.cookies
     });
@@ -95,7 +95,6 @@ home_router.post(app_configuration.signup, function(req, res) {
     })
     .catch(function(error) {
         const error_messages = {};
-        console.log(error);
         if (error) {
             for (const field in error.extra.errors) {error_messages[field] = error.extra.errors[field].message;}
             res.cookie(app_constants.cookies.ERROR, JSON.stringify(error_messages));
@@ -106,7 +105,6 @@ home_router.post(app_configuration.signup, function(req, res) {
 });
 
 home_router.get(app_configuration.verification_email_sent_page, function(req, res, next) {
-    console.log(req.originalUrl, req.method, req.statusCode);
     if (req.originalUrl === app_configuration.verification_email_sent_page) res.redirect(app_configuration.home);
     else if (req.method !== "POST" && req.originalUrl !== app_configuration.signup_page) res.redirect(req.originalUrl);
     else {
@@ -146,8 +144,11 @@ home_router.get(app_configuration.logout, function(req, res) {
         res.redirect(app_configuration.home);
     })
     .catch(function(error) {
-        console.log(error);
         if (error) res.cookie(app_constants.cookies.ERROR, error.extra);
+        res.clearCookie(app_constants.cookies.USER_LOGGED_IN);
+        res.clearCookie(app_constants.cookies.USER_SESSION_ID);
+        res.clearCookie(app_constants.cookies.USER_SESSION_SALT);
+        res.clearCookie(app_constants.cookies.USER_SESSION_HASH);
         if (!req.cookies[app_constants.cookies.USER_SESSION_ID]) res.cookie(app_constants.cookies.ERROR, error.extra);
         res.redirect(app_configuration.home);
     });
@@ -168,26 +169,16 @@ home_router.get(app_configuration.reset_password, function(req, res) {
 
 home_router.post(app_configuration.reset_password, function(req, res) {
     controller.users.reset_password(req, res, req.body[app_configuration.form_fields.email_address])
-    .then(
-        // if successful, send the email 
-        // generate a token to be used for the reset password confirm page
-        // when the reset process was successful, the page will close down
-        res.redirect(app_configuration.home)
-        
-    )
+    .then(function() {
+        res.redirect(app_configuration.home);
+    })
     .catch(function(error) {
         // if not, then eh...
         console.log(error);
-        res.cookie(app_constants.cookies.ERROR, error.extra);
-        res.redirect(app_configuration.reset_password);
+        res.cookie(app_constants.cookies.ERROR, error.extra).redirect(app_configuration.reset_password_page);
     });
 });
 
-// TODO: Reset Password Confirm
-// * After the email from the reset password was sent a page will be live for only a few hours
-// * If it expires, the page will be nonexistent and cannot be accessed anymore until such a case that the same token was generated
-// * If the password replacement process on the password confirm page was successsful, the page will also be closed
-// * There should be another email to be sent confirming the password reset 
 home_router.get(`${app_configuration.reset_password_confirm}/:jwt`, function(req, res, next) {
     controller.users.verify_password_token(req, res, req.params.jwt)
     .then(function(decoded_string) {
@@ -214,6 +205,7 @@ home_router.get(`${app_configuration.reset_password_confirm}/:jwt`, function(req
 home_router.post(`${app_configuration.reset_password_confirm}/:jwt`, function(req, res, next) {
     controller.users.reset_password_confirm(req, res, req.params.jwt)
     .then(function() {
+        res.cookie(app_constants.cookies.SUCCESS, app_constants.signup_success.SIGNUP_SUCCESSFUL_MSG);
         res.redirect(app_configuration.home);
     })
     .catch(function(error) {

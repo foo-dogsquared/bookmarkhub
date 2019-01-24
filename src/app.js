@@ -35,6 +35,7 @@ app
     }))
     .use(function(req, res, next) {
         if (req.cookies[app_constants.cookies.ERROR]) res.clearCookie(app_constants.cookies.ERROR);
+        if (req.cookies[app_constants.cookies.SUCCESS]) res.clearCookie(app_constants.cookies.SUCCESS);
         res.cookie(app_constants.cookies.SESSION_ID, req.sessionID);
         if (req.cookies[app_constants.cookies.USER_SESSION_ID]) res[app_constants.cookies.USER_SESSION_ID_COPY] = req.cookies[app_constants.cookies.USER_SESSION_ID];
         next();

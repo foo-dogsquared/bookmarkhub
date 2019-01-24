@@ -4,7 +4,7 @@
   "description": "A place to share your bookmarks or something.",
   "main": "index.js",
   "dependencies": {
-    "connect-mongo": "2.0.3",
+    "connect-mongodb-session": "2.0.6",
     "cookie-parser": "1.4.3",
     "cors": "2.8.5",
     "csurf": "1.9.0",

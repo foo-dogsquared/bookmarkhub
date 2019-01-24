@@ -1,13 +1,25 @@
 extends default
 include ../mixins/signup_banner
+include ../mixins/error_banner
+include ../mixins/success_banner
+
+mixin feature_block(feature_header, feature_description, image_link, img_alt)
+    .feature-block
+        .feature-description-block
+            h2= feature_header
+            p= feature_description
+        img.feature-icon-block(src=image_link, alt=img_alt)
 
 block content
-    .error-block= error
+    +error_banner(error)
+    +success_banner(success)
     img(src="/img/book-candle-tailpiece.jpg", alt="Book on a candle tailpiece", width="450px")
     h1 #{app_configuration.app_icon} #{app_configuration.app_name}
     h2 #{app_configuration.app_description}
-    p.home-text-block Greetings, cyberspace wanderer. I'm pretty sure you're using this thing called the internet.
-    p.home-text-block Being a
-    p.home-text-block Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat, numquam repudiandae? Ut in dolore, consequuntur sit, ipsa quas consequatur autem voluptatum qui quaerat ullam harum ipsum enim laborum hic atque!
+    p Greetings, cyberspace wanderer. I'm pretty sure you're using this thing called the internet, right?
+    p The internet is a very wide place. So wide that it's pretty much like a whole new world out there. With this
+    p bookmarkhub is a free and open source software as a service for sharing bookmarks that is present all over the net. Think of it as a low-key social media site for bookmarks or something. 😁
+    +feature_block("Store your bookmarks", "You can store your bookmarks here! Also supports imports from valid HTML bookmarks, Pocket exports, and valid JSON bookmark files (will support this soon). Well, you can also export those bookmarks, too.", "./img/save-icon.png", "save icon")
+    +feature_block("Share your bookmarks around the net", "That's the point of this website. To provide a uniform way on sharing your bookmarks without the hassle!", "./img/share-icon.png", "share icon")
+    +feature_block("Discover other users (Soon™)", "View each other's profile (or don't if you want to). If you just want some privacy just ask for it, bookmarkhub takes care of that, too.", "./img/trio-bookmark.png", "a cluster of bookmarks")
     +signup_prompt(cookies[cookies_constant.USER_SESSION_ID])    
-    
