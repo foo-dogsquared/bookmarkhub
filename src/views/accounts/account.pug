@@ -7,12 +7,12 @@ block content
     if user_object.description
         h2= user_object.description
     else
-        p It looks like they don't have a description yet...
+        p It looks like #{user_object.username} doesn't have a description yet...
     //- make the import bookmark interface
     if user_object.bookmarks
         .bookmarks-container
             h2= user_object.bookmarks.root_name
             +bookmark_component(user_object.bookmarks)
     else
-        p It seems like they don't have saved bookmarks yet.
+        p It seems like #{user_object.username} doesn't have saved bookmarks yet.
     +signup_prompt(cookies[cookies_constant.USER_SESSION_ID])

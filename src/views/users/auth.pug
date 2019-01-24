@@ -1,10 +1,10 @@
 mixin show_error_list(error_object)
     if error_object
-        .form-input-errors
+        .error-block
             ul
                 each value, key in error_object
                     li #{value}
 
 mixin show_error_message(error_message)
     if error_message
-        p.error-message-block= error_message
+        p.error-block= error_message
