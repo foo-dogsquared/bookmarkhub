@@ -3,7 +3,6 @@ const session = require('express-session');
 const helmet = require('helmet');
 const cookie_parser = require("cookie-parser");
 const nanoid_generate = require("nanoid/generate");
-const dotenv = require("dotenv").config();
 const logger = require("morgan");
 const nanoid_url_friendly_alphabet = require("nanoid/url");
 const bookmarkhub_router = require("./router");

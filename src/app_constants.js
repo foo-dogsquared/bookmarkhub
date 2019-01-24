@@ -1,4 +1,3 @@
-const dotenv = require("dotenv").config();
 // Pug gives undefined for objects with reference to `this`
 // and it also might go under change so that's why they're outside of the
 // object
@@ -47,7 +46,7 @@ exports.app_configuration = {
     
     // routes
     home: "/",
-    google_analytics_id: process.env.GOOGLE_ANALYTICS_ID,
+    google_analytics_id: process.env.GOOGLE_ANALYTICS_ID || "",
     bookmarks_page,
     submit_bookmarks_uri,
     account,
