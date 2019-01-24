@@ -7,7 +7,6 @@ const api_response = require("../models/api_response");
 const session_store = require("../session_store");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv").config();
 
 function send_verification_mail(req, res, username, email_address) {
     return new Promise(function(resolve, reject) {
