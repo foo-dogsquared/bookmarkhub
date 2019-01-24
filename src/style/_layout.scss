@@ -30,7 +30,7 @@
     &:first-of-type {margin-left: 0; margin-right: ($base-margin-width / 2)}
 }
 
-.faq-block {
+.faq-block, .feature-block {
     display: flex;
     margin-bottom: ($base-margin-width * 1.75);
     
@@ -40,22 +40,13 @@
     @media screen and (max-width: $on-tablet) {display: block;}
 }
 
-.faq-word-block {
+.faq-word-block, .feature-description-block {
     width: 60%;
-
-    p {
-        font-size: 1.3rem; 
-        line-height: $base-line-height; 
-        font-family: $secondary-font-family;
-
-        @media screen and (max-width: $on-tablet) {font-size: 1.2rem;}
-        @media screen and (max-width: $on-phone) {font-size: 1.1rem;}
-    }
 
     @media screen and (max-width: $on-tablet) {width: unset;}
 }
 
-.faq-picture-block {
+.faq-picture-block, .feature-icon-block {
     margin: auto;
     @media screen and (max-width: $on-tablet) {display: none;}
 }
@@ -76,4 +67,43 @@
     padding: 1.5em;
 }
 
+.error-block {
+    background: $error;
+    border: darken($error, 20%) dashed 3px;
+    color: white;
+    margin: 0 auto 1em auto;
+    padding: 1em;
+    text-align: center;
+    width: 50%;
+}
 
+.success-block {
+    background: $success;
+    border: darken($success, 20%) dashed 3px;
+    margin: 0 auto 1em auto;
+    padding: 1em;
+    text-align: center;
+    width: 50%;
+}
+
+.bookmark-folder {
+    border: 2px black solid;
+    padding: 1em;
+    margin: 1em auto;
+    background: white;
+
+    &::after {
+        padding-bottom: .5em;
+        border-bottom: 2px black solid;
+    }
+
+    &:hover {
+        background: $brand-color-light-2;
+    }
+}
+
+.bookmark-link {
+    &::before {
+        content: "- "
+    }
+}
