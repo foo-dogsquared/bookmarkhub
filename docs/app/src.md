@@ -123,3 +123,41 @@ The app uses [MongoDB](https://mongodb.com/) as the database but since MongoDB i
 If you didn't get the context, MongoDB is not strict when it comes to forming data. Of course, that means the data can be horizontally scaled but that also means that you are going to be responsible and gather the discipline to make your individual data consistent and uniform. This is unlike SQL where it requires planning of modelling the data in the first place.
 
 Mongoose solves that very problem by imposing modelling options and helper functions that usually comes with it like validations and data type setting.
+
+To get started to Mongoose, we need to structure our data which is simply the users. Here is how I planned the structure:
+
+![User schema](../assets/user_schema.png)
+
+The users structure is quite simple, we just have the common user data like username, email address, password (hashed, of course), and the main point of the site which is the bookmarks. The bookmark object has four objects which contains the name of the bookmark, the name of the root folder, the type of bookmark which is imported from, and the structure of the bookmark itself. There's also a specific field that marks the user account whether it has been verified or not which is obviously the `confirmed` field.
+
+Mongoose provides [a LOT of out-of-the-box features](https://mongoosejs.com/docs/guide.html) which is suitably needed for a database which will handle user data and of course, I decided to use it. Please read more of the previously linked guide if you want to understand most of the code at this directory. Just understand what are schema, virtuals, models, and validation. Also take note that validation for passwords are not really working when updating it since they are virtuals so in case you have to check for the password themselves, you need to validate them yourself.
+
+## [`controllers/`](../../src/controllers/)
+This is basically a bunch of scripts containing how the data should interact. It mainly serves as a gatekeeper between the routes and the database. It also serves as an additional validator since Mongoose cannot validate everything (or at least I think it is) especially with the password since we can't just store them in plaintext.
+
+Anyway, at the moment, we have three JavaScript files.
+
+- [`./index.js`](../../src/controllers/index.js) &mdash; contains the exports of the rest of the other scripts; it basically serves as a module for the directory 
+- [`./accounts.js`](../../src/controllers/accounts.js) &mdash; contains the functions for interacting with the account when you logged in; functions include retrieving users when you visit a particular page, checking for session cookies and validating them in the session store, saving the edited description, and saving and converting the bookmarks (from `../parser/` directory which will be discussed later)
+- [`./users.js`](../../src/controllers/users.js) &mdash; contains the functions for usual user actions such as signing up, logging in, logging out, resetting and confirming password resets, and sending out specific types of email;
+
+All of these relate for interacting with the routing which will be the next directory to be discussed.
+
+## [`router/`](../../src/router/)
+The directory contains the scripts for the routes. It contains the scripts where a guest visitor could go and not go without restricting it.
+
+Like the `../controllers/` directory, it also contains an `index.js` file that serves as a uniform way of exposing the functions without importing them all but let's discuss about the rest:
+
+- [`./route_account.js/`](../../src/router/route_account.js) &mdash; this contains all of the routes for `<ORIGIN>/account/`; mostly contains interaction with your personal account and uses functions from `../controllers/account.js` 
+- [`./route_home.js/`](../../src/router/route_home.js) &mdash; this contains all of the routes for `<ORIGIN>`; this includes the help, about, signup, login, logout, reset password and the confirmation page; mostly uses the functions from `../controllers/users.js`
+- [`./route_users.js/`](../../src/router/route_users.js) &mdash; it contains only route and that is the route for the user page who was able to sign up for the app
+
+## [`parser/`](../../src/parser/)
+This contains the parser for the bookmark imports. So far, only the Netscape and Pocket exports are complete and functional which you can test it out from the `test/` directory on the root.
+
+Like with the rest of the directories, it also contains an `index.js` that serves as a bridge between the rest of the files in the same directory but this time, it serves as the export to create one core function.
+
+Well, you can also check out the additional resources I was able to look up for [Netscape bookmarks](../netscape_bookmarks/). You may also add your own notes as well and make a pull request, if you want to.
+
+## Conclusion
+Anyway, this concludes the tour of the source code. Let me know how this documentation turns out to be whether it is good or bad in quality. Feel free to ping me with email or something. 🙂
