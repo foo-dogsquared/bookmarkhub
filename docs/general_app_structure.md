@@ -32,6 +32,3 @@ If you're testing this app on your local machine, make sure to have an `.env` fi
 
 Anyways, if you want to have a tour of the app structure, just follow the links provided below:
 - [`src/`](./app/src.md) <-- I RECOMMEND TO START HERE
-- [`test/`](./app/test.md)
-- [`public/`](./app/public.md)
-- [`server.js`](./app/server_js.md)

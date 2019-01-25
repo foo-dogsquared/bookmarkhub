@@ -1,5 +1,3 @@
-
-
 Additional test units:
 - [A large Netscape bookmark](https://www-archive.mozilla.org/quality/browser/front-end/testcases/bookmarks/large-bookmarks.html)
 - [A pretty small Netscape bookmark](https://www-archive.mozilla.org/quality/browser/front-end/testcases/bookmarks/netscape-bookmarks.html)
