@@ -1,11 +1,16 @@
 mixin bookmark_component(object)
-    +bookmark_children_component(object["children"])
+        .bookmarks
+            p Your bookmarks
+            +bookmark_children_component(object["children"])
+            script
+                include bookmarks.js
 
 mixin bookmark_children_component(children)
     each value, key in children
         if (typeof(value) === "object" && value.toString() === "[object Object]")
-            .bookmark-folder #{key}
-                +bookmark_children_component(value)
+            .bookmark-container
+                .bookmark-folder #{key}
+                .bookmark-items
+                    +bookmark_children_component(value)
         else
-            .bookmark-link
-                a(href=value) #{key}
+            a.bookmark-link(href=value) #{key}

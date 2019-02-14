@@ -289,20 +289,41 @@ form > * {
   width: 50%;
 }
 
-.bookmark-folder {
-  border: 2px black solid;
-  padding: 1em;
+.bookmarks > * {
   margin: 1em auto;
-  background: white;
-}
-.bookmark-folder::after {
-  padding-bottom: 0.5em;
-  border-bottom: 2px black solid;
-}
-.bookmark-folder:hover {
-  background: #b8eb79;
 }
 
+.bookmark-folder {
+  cursor: pointer;
+}
+.bookmark-folder::before {
+  content: "> ";
+}
+.bookmark-folder.active::before {
+  content: "V ";
+}
+
+.bookmark-folder:hover, .bookmark-link:hover {
+  background: lightgray;
+}
+
+.bookmark-items {
+  display: none;
+}
+.bookmark-items > * {
+  padding-left: 20px;
+  margin: 1em auto;
+}
+
+.active {
+  display: block;
+}
+
+.bookmark-link {
+  display: block;
+}
 .bookmark-link::before {
   content: "- ";
+  display: inline-block;
+  margin-right: 0.25em;
 }
